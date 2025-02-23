@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Home } from './pages/Home';
 import { NovaDenuncia } from './pages/NovaDenuncia';
+import { ListaDenuncias } from './pages/ListaDenuncias';
 import { DenunciasProvider } from './context/DenunciasContext';
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/nova-denuncia" element={<NovaDenuncia />} />
+            <Route path="/denuncias" element={<ListaDenuncias />} />
           </Routes>
         </div>
       </BrowserRouter>
