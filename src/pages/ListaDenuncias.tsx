@@ -1,7 +1,7 @@
 import React from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { MapPin, Image as ImageIcon } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 import { useDenuncias } from '../context/DenunciasContext';
 
 export const ListaDenuncias: React.FC = () => {
