@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { useDenuncias } from '../context/DenunciasContext';
+import { InputField } from '../components/InputField';
+import { ImageUpload } from '../components/ImageUpload';
 
 export const NovaDenuncia: React.FC = () => {
   const navigate = useNavigate();
@@ -79,123 +81,71 @@ export const NovaDenuncia: React.FC = () => {
       <h1 className="text-3xl font-bold text-gray-900 mb-8">Nova Denúncia</h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <label htmlFor="descricao" className="block text-sm font-medium text-gray-700">
-            Descrição
-          </label>
-          <textarea
-            id="descricao"
-            rows={4}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-            placeholder="Descreva o problema..."
-            value={formData.descricao}
-            onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
-            required
-            maxLength={500}
-          />
-        </div>
+        <InputField
+          id="descricao"
+          label="Descrição"
+          type="text"
+          value={formData.descricao}
+          placeholder="Descreva o problema..."
+          onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
+          required
+        />
 
-        <div>
-          <label htmlFor="cep" className="block text-sm font-medium text-gray-700">
-            CEP
-          </label>
-          <input
-            type="text"
-            id="cep"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-            placeholder="Digite o CEP"
-            value={cep}
-            onChange={handleCepChange}
-            maxLength={8}
-            required
-          />
-          {cepError && <p className="text-red-500 text-sm mt-1">{cepError}</p>}
-        </div>
+        <InputField
+          id="cep"
+          label="CEP"
+          type="text"
+          value={cep}
+          placeholder="Digite o CEP"
+          onChange={handleCepChange}
+          required
+          errorMessage={cepError}
+        />
 
-        <div>
-          <label htmlFor="estado" className="block text-sm font-medium text-gray-700">
-            Estado
-          </label>
-          <input
-            type="text"
-            id="estado"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-            value={formData.estado}
-            readOnly
-            required
-          />
-        </div>
+        <InputField
+          id="estado"
+          label="Estado"
+          value={formData.estado}
+          onChange={() => {}}
+          readOnly
+          required
+        />
 
-        <div>
-          <label htmlFor="cidade" className="block text-sm font-medium text-gray-700">
-            Cidade
-          </label>
-          <input
-            type="text"
-            id="cidade"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-            value={formData.cidade}
-            readOnly
-            required
-          />
-        </div>
+        <InputField
+          id="cidade"
+          label="Cidade"
+          value={formData.cidade}
+          onChange={() => {}}
+          readOnly
+          required
+        />
 
-        <div>
-          <label htmlFor="rua" className="block text-sm font-medium text-gray-700">
-            Rua
-          </label>
-          <input
-            type="text"
-            id="rua"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-            value={formData.rua}
-            readOnly
-            required
-          />
-        </div>
+        <InputField
+          id="rua"
+          label="Rua"
+          value={formData.rua}
+          onChange={() => {}}
+          readOnly
+          required
+        />
 
-        <div>
-          <label htmlFor="numero" className="block text-sm font-medium text-gray-700">
-            Número (opcional)
-          </label>
-          <input
-            type="text"
-            id="numero"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-            placeholder="Digite o número"
-            value={formData.numero}
-            onChange={(e) => setFormData({ ...formData, numero: e.target.value })}
-          />
-        </div>
+        <InputField
+          id="numero"
+          label="Número (opcional)"
+          value={formData.numero}
+          placeholder="Digite o número"
+          onChange={(e) => setFormData({ ...formData, numero: e.target.value })}
+        />
 
-        <div>
-          <label htmlFor="complemento" className="block text-sm font-medium text-gray-700">
-            Complemento (opcional)
-          </label>
-          <input
-            type="text"
-            id="complemento"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-            placeholder="Digite o complemento"
-            value={formData.complemento}
-            onChange={(e) => setFormData({ ...formData, complemento: e.target.value })}
-          />
-        </div>
+        <InputField
+          id="complemento"
+          label="Complemento (opcional)"
+          value={formData.complemento}
+          placeholder="Digite o complemento"
+          onChange={(e) => setFormData({ ...formData, complemento: e.target.value })}
+        />
 
-        <div>
-          <label htmlFor="imagemUrl" className="block text-sm font-medium text-gray-700">
-            Upload de Imagem
-          </label>
-          <div className="mt-1 flex items-center">
-            <input
-              type="file"
-              id="imagemUrl"
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
-            />
-          </div>
-        </div>
+        <ImageUpload onChange={handleImageUpload} />
 
         <div className="flex justify-end space-x-4">
           <button
