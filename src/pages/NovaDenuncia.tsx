@@ -4,6 +4,10 @@ import { Loader2 } from 'lucide-react';
 import { useDenuncias } from '../context/DenunciasContext';
 import { InputField } from '../components/InputField';
 import { ImageUpload } from '../components/ImageUpload';
+import { Button } from '../components/Button';
+import { Form } from '../components/Form';
+import { PageLayout } from '../components/PageLayout';
+import { Alert } from '../components/Alert';
 
 export const NovaDenuncia: React.FC = () => {
   const navigate = useNavigate();
@@ -78,10 +82,10 @@ export const NovaDenuncia: React.FC = () => {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Nova Denúncia</h1>
+<PageLayout title="Nova Denúncia">
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <InputField
+      <Form onSubmit={handleSubmit}>
+      <InputField
           id="descricao"
           label="Descrição"
           type="text"
@@ -99,14 +103,13 @@ export const NovaDenuncia: React.FC = () => {
           placeholder="Digite o CEP"
           onChange={handleCepChange}
           required
-          errorMessage={cepError}
-        />
-
+          />
+          {cepError && <Alert message={cepError} type="error" />} 
         <InputField
           id="estado"
           label="Estado"
           value={formData.estado}
-          onChange={() => {}}
+          onChange={() => { }}
           readOnly
           required
         />
@@ -115,7 +118,7 @@ export const NovaDenuncia: React.FC = () => {
           id="cidade"
           label="Cidade"
           value={formData.cidade}
-          onChange={() => {}}
+          onChange={() => { }}
           readOnly
           required
         />
@@ -124,7 +127,7 @@ export const NovaDenuncia: React.FC = () => {
           id="rua"
           label="Rua"
           value={formData.rua}
-          onChange={() => {}}
+          onChange={() => { }}
           readOnly
           required
         />
@@ -148,17 +151,17 @@ export const NovaDenuncia: React.FC = () => {
         <ImageUpload onChange={handleImageUpload} />
 
         <div className="flex justify-end space-x-4">
-          <button
+          <Button
             type="button"
             onClick={() => navigate('/')}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
           >
             Cancelar
-          </button>
-          <button
+          </Button>
+          <Button
             type="submit"
             disabled={loading}
-            className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+            className="bg-indigo-600 text-white hover:bg-indigo-700"
           >
             {loading ? (
               <>
@@ -168,9 +171,10 @@ export const NovaDenuncia: React.FC = () => {
             ) : (
               'Enviar Denúncia'
             )}
-          </button>
+          </Button>
         </div>
-      </form>
-    </div>
+      </Form>
+      </PageLayout>
+      </div>
   );
 };
