@@ -21,6 +21,12 @@ export const Header: React.FC = () => {
             <Link to="/denuncias" className="hover:text-indigo-200 px-3 py-2 rounded-md">
               Lista de Denúncias
             </Link>
+            <Link to="/login" className="hover:text-indigo-200 px-3 py-2 rounded-md">
+              Login
+            </Link>
+            <Link to="/signup" className="hover:text-indigo-200 px-3 py-2 rounded-md">
+              Cadastro
+            </Link>
           </div>
         </div>
       </nav>
