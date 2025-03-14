@@ -3,6 +3,7 @@ import { Header } from './components/Header';
 import { Home } from './pages/Home';
 import { NovaDenuncia } from './pages/NovaDenuncia';
 import { ListaDenuncias } from './pages/ListaDenuncias';
+import { Login } from './pages/Login';
 import { DenunciasProvider } from './context/DenunciasContext';
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/nova-denuncia" element={<NovaDenuncia />} />
             <Route path="/denuncias" element={<ListaDenuncias />} />
+            <Route path="/login" element={<Login />} />
           </Routes>
         </div>
       </BrowserRouter>
