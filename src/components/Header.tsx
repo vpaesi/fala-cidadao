@@ -14,8 +14,8 @@ export const Header: React.FC = () => {
             <span className="font-bold text-xl">Sistema de Denúncias</span>
           </Link>
           <div className="flex space-x-4">
-          {location.pathname !== '/signup' && (
-              <Link to="/signup" className="hover:text-indigo-200 px-3 py-2 rounded-md">
+          {location.pathname !== '/cadastro' && (
+              <Link to="/cadastro" className="hover:text-indigo-200 px-3 py-2 rounded-md">
                 Cadastro
               </Link>
             )}
@@ -24,7 +24,7 @@ export const Header: React.FC = () => {
                 Login
               </Link>
             )}
-            {location.pathname !== '/home' && (
+            {location.pathname !== '/' && (
               <Link to="/" className="hover:text-indigo-200 px-3 py-2 rounded-md">
                 Home
               </Link>

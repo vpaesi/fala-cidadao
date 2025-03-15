@@ -14,9 +14,9 @@ function App() {
         <div className="min-h-screen bg-gray-50">
           <Header />
           <Routes>
-            <Route path="/" element={<Signup />} />
+            <Route path="/cadastro" element={<Signup />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/home" element={<Home />} />
+            <Route path="/" element={<Home />} />
             <Route path="/nova-denuncia" element={<NovaDenuncia />} />
             <Route path="/denuncias" element={<ListaDenuncias />} />
           </Routes>
