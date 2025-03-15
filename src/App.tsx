@@ -14,11 +14,11 @@ function App() {
         <div className="min-h-screen bg-gray-50">
           <Header />
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Signup />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/home" element={<Home />} />
             <Route path="/nova-denuncia" element={<NovaDenuncia />} />
             <Route path="/denuncias" element={<ListaDenuncias />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/login" element={<Login />} />
           </Routes>
         </div>
       </BrowserRouter>

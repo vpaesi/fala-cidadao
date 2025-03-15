@@ -7,12 +7,13 @@ import { ImageUpload } from '../components/ImageUpload';
 import { Button } from '../components/Button';
 import { Form } from '../components/Form';
 import { PageLayout } from '../components/PageLayout';
-import { Alert } from '../components/Alert';
+import { EnderecoForm } from '../components/EnderecoForm';
 
 export const NovaDenuncia: React.FC = () => {
   const navigate = useNavigate();
   const { addDenuncia, loading } = useDenuncias();
   const [formData, setFormData] = useState({
+    titulo: '',
     descricao: '',
     estado: '',
     cidade: '',
@@ -24,8 +25,34 @@ export const NovaDenuncia: React.FC = () => {
   const [imagemFile, setImagemFile] = useState<File | null>(null);
   const [cep, setCep] = useState('');
   const [cepError, setCepError] = useState('');
+  const [estados, setEstados] = useState<string[]>([]);
+  const [cidades, setCidades] = useState<string[]>([]);
 
-  const handleCepChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const fetchEstados = async () => {
+    try {
+      const response = await fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados');
+      const data = await response.json();
+      const estadosBrasil = data.map((estado: { sigla: string }) => estado.sigla);
+      setEstados(estadosBrasil);
+    } catch (error) {
+      console.error('Erro ao buscar estados:', error);
+    }
+  };
+
+
+  const fetchCidades = async (estado: string) => {
+    try {
+      const response = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${estado}/municipios`);
+      const data = await response.json();
+      const cidades = data.map((cidade: { nome: string }) => cidade.nome);
+      setCidades(cidades);
+    } catch (error) {
+      console.error('Erro ao buscar cidades:', error);
+    }
+  };
+
+
+  const handleCepChange = async (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const value = e.target.value;
     setCep(value);
 
@@ -44,6 +71,7 @@ export const NovaDenuncia: React.FC = () => {
             cidade: data.localidade,
             rua: data.logradouro,
           }));
+          await fetchCidades(data.uf);
         }
       } catch {
         setCepError('Erro ao buscar o CEP.');
@@ -71,7 +99,7 @@ export const NovaDenuncia: React.FC = () => {
     try {
       const imagemUrl = imagemFile
         ? URL.createObjectURL(imagemFile)
-        : 'https://via.placeholder.com/150?text=Sem+Imagem';
+        : 'https://t4.ftcdn.net/jpg/04/99/93/31/360_F_499933117_ZAUBfv3P1HEOsZDrnkbNCt4jc3AodArl.jpg';
 
       await addDenuncia({ ...formData, imagemUrl });
       navigate('/denuncias');
@@ -80,101 +108,83 @@ export const NovaDenuncia: React.FC = () => {
     }
   };
 
+  React.useEffect(() => {
+    fetchEstados();
+  }, []);
+
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8">
-<PageLayout title="Nova Denúncia">
-
-      <Form onSubmit={handleSubmit}>
-      <InputField
-          id="descricao"
-          label="Descrição"
-          type="text"
-          value={formData.descricao}
-          placeholder="Descreva o problema..."
-          onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
-          required
-        />
-
-        <InputField
-          id="cep"
-          label="CEP"
-          type="text"
-          value={cep}
-          placeholder="Digite o CEP"
-          onChange={handleCepChange}
-          required
-          />
-          {cepError && <Alert message={cepError} type="error" />} 
-        <InputField
-          id="estado"
-          label="Estado"
-          value={formData.estado}
-          onChange={() => { }}
-          readOnly
-          required
-        />
-
-        <InputField
-          id="cidade"
-          label="Cidade"
-          value={formData.cidade}
-          onChange={() => { }}
-          readOnly
-          required
-        />
-
-        <InputField
-          id="rua"
-          label="Rua"
-          value={formData.rua}
-          onChange={() => { }}
-          readOnly
-          required
-        />
-
-        <InputField
-          id="numero"
-          label="Número (opcional)"
-          value={formData.numero}
-          placeholder="Digite o número"
-          onChange={(e) => setFormData({ ...formData, numero: e.target.value })}
-        />
-
-        <InputField
-          id="complemento"
-          label="Complemento (opcional)"
-          value={formData.complemento}
-          placeholder="Digite o complemento"
-          onChange={(e) => setFormData({ ...formData, complemento: e.target.value })}
-        />
-
-        <ImageUpload onChange={handleImageUpload} />
-
-        <div className="flex justify-end space-x-4">
-          <Button
-            type="button"
-            onClick={() => navigate('/')}
-            className="bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
-          >
-            Cancelar
-          </Button>
-          <Button
-            type="submit"
-            disabled={loading}
-            className="bg-indigo-600 text-white hover:bg-indigo-700"
-          >
-            {loading ? (
-              <>
-                <Loader2 className="animate-spin -ml-1 mr-2 h-5 w-5" />
-                Enviando...
-              </>
-            ) : (
-              'Enviar Denúncia'
-            )}
-          </Button>
+    <div className="max-w-2xl mx-auto px-4 py-8" style={{ border: '1px solid black', borderRadius: 8, boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', backgroundColor: 'white', marginTop: 20, marginBottom: 20, padding: 5 }} title='Nova Denúncia'>
+      <PageLayout title="Nova Denúncia">
+        <div className="mb-4" style={{ paddingBottom: 10, paddingTop: 0 }}>
+        <h2 className='subtitulo' style={{padding: 0, margin: 0}}>Não se preocupe, a sua denúncia será anônima</h2>
         </div>
-      </Form>
+        <Form onSubmit={handleSubmit}>
+          <InputField
+            id="titulo"
+            label="Dê um título à sua denúncia"
+            type="text"
+            value={formData.descricao}
+            placeholder="Nome completo"
+            onChange={(e) => setFormData({...formData, descricao: e.target.value })}
+            required
+            style={{ padding: '10px', border: '1px solid'}}
+          />
+          <InputField
+            id="descricao"
+            label="Descrição"
+            type="textarea"
+            value={formData.descricao}
+            placeholder="Descreva o problema..."
+            onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
+            required
+            style={{ padding: '10px', border: '1px solid'}}
+          />
+
+          <EnderecoForm
+            formData={formData}
+            cep={cep}
+            cepError={cepError}
+            estados={estados}
+            cidades={cidades}
+            onCepChange={handleCepChange}
+            onEstadoChange={(e) => {
+              const estado = e.target.value;
+              setFormData({ ...formData, estado });
+              fetchCidades(estado);
+            }}
+            onCidadeChange={(e) => setFormData({ ...formData, cidade: e.target.value })}
+            onInputChange={(field, value) => setFormData({ ...formData, [field]: value })}
+          />
+
+          <div>
+            <ImageUpload onChange={handleImageUpload} />
+          </div>
+
+          <div className="flex justify-end space-x-4">
+            <Button
+              type="button"
+              onClick={() => navigate('/')}
+              className="bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
+            >
+              Cancelar
+            </Button>
+            <Button
+              type="submit"
+              disabled={loading}
+              className="bg-indigo-600 text-white hover:bg-indigo-700"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="animate-spin -ml-1 mr-2 h-5 w-5" />
+                  Enviando...
+                </>
+              ) : (
+                'Enviar Denúncia'
+              )}
+            </Button>
+          </div>
+        </Form>
       </PageLayout>
-      </div>
+    </div>
   );
 };
