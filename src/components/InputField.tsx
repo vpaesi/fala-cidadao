@@ -22,7 +22,6 @@ export const InputField: React.FC<InputFieldProps> = ({
   onChange,
   readOnly = false,
   required = false,
-  style,
   errorMessage,
 }) => {
   return (
@@ -42,7 +41,7 @@ export const InputField: React.FC<InputFieldProps> = ({
             onChange={onChange}
             readOnly={readOnly}
             required={required}
-            style={{ ...style }}
+            style={{ border: '1px solid black', borderRadius: 8, boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', backgroundColor: 'white', marginTop: 20, marginBottom: 20, padding: 5 }}
             rows={4}
           />
         ) : (
@@ -57,7 +56,7 @@ export const InputField: React.FC<InputFieldProps> = ({
             onChange={onChange}
             readOnly={readOnly}
             required={required}
-            style={{ ...style }}
+            style={{ border: '1px solid black', borderRadius: 8, boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', backgroundColor: 'white', marginTop: 20, marginBottom: 20, padding: 5 }}
           />
         )}
       </div>
