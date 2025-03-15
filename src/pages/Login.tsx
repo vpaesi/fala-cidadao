@@ -10,12 +10,23 @@ export const Login: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Dados de login:', formData);
+
+    const user = JSON.parse(localStorage.getItem('user') || '[]');
+    const userExists = user.find((user: { email: string }) => user.email === formData.email);
+
+    if (userExists) {
+      localStorage.setItem('user', JSON.stringify(userExists));
+      navigate('/denuncias');
+    } else {
+      alert('Usuário não cadastrado. Por favor, faça o cadastro primeiro.');
+    }
+
+    localStorage.setItem('user', JSON.stringify(userExists));
     navigate('/');
   };
 
   return (
-    <div className="max-w-md mx-auto px-4 py-8" style={{ border: '1px solid black', borderRadius: 8, boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', backgroundColor: 'white', padding: 50, marginTop: '2.5rem'}}>
+    <div className="max-w-md mx-auto px-4 py-8" style={{ border: '1px solid black', borderRadius: 8, boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', backgroundColor: 'white', padding: 50, marginTop: '2.5rem' }}>
       <h1 className="text-3xl font-bold text-gray-900 mb-8">Login</h1>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
@@ -30,7 +41,7 @@ export const Login: React.FC = () => {
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             required
-            style={{ border: '1px solid black', borderRadius: 8, boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', padding: 10, marginTop: '1rem'}}
+            style={{ border: '1px solid black', borderRadius: 8, boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', padding: 10, marginTop: '1rem' }}
           />
         </div>
         <div>
@@ -45,7 +56,7 @@ export const Login: React.FC = () => {
             value={formData.senha}
             onChange={(e) => setFormData({ ...formData, senha: e.target.value })}
             required
-            style={{ border: '1px solid black', borderRadius: 8, boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', padding: 10, marginTop: '1rem'}}
+            style={{ border: '1px solid black', borderRadius: 8, boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', padding: 10, marginTop: '1rem' }}
           />
         </div>
         <button

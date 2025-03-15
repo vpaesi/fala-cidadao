@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { useDenuncias } from '../context/DenunciasContext';
@@ -11,6 +11,8 @@ import { EnderecoForm } from '../components/EnderecoForm';
 
 export const NovaDenuncia: React.FC = () => {
   const navigate = useNavigate();
+  const isAuthenticated = localStorage.getItem('user'); 
+  const users = JSON.parse(localStorage.getItem('users') || '[]');
   const { addDenuncia, loading } = useDenuncias();
   const [formData, setFormData] = useState({
     titulo: '',
@@ -28,6 +30,13 @@ export const NovaDenuncia: React.FC = () => {
   const [estados, setEstados] = useState<string[]>([]);
   const [cidades, setCidades] = useState<string[]>([]);
 
+  useEffect(() => {
+    if (!isAuthenticated) {
+      alert('Por favor, faça o login primeiro.');
+      navigate('/login');
+    }
+  }, [isAuthenticated, navigate, users]);
+
   const fetchEstados = async () => {
     try {
       const response = await fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados');
@@ -39,7 +48,6 @@ export const NovaDenuncia: React.FC = () => {
     }
   };
 
-
   const fetchCidades = async (estado: string) => {
     try {
       const response = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${estado}/municipios`);
@@ -50,7 +58,6 @@ export const NovaDenuncia: React.FC = () => {
       console.error('Erro ao buscar cidades:', error);
     }
   };
-
 
   const handleCepChange = async (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const value = e.target.value;
@@ -108,7 +115,7 @@ export const NovaDenuncia: React.FC = () => {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetchEstados();
   }, []);
 
@@ -116,7 +123,7 @@ export const NovaDenuncia: React.FC = () => {
     <div className="max-w-2xl mx-auto px-4 py-8" style={{ border: '1px solid black', borderRadius: 8, boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', backgroundColor: 'white', marginTop: 20, marginBottom: 20, padding: 5 }} title='Nova Denúncia'>
       <PageLayout title="Nova Denúncia">
         <div className="mb-4" style={{ paddingBottom: 10, paddingTop: 0 }}>
-        <h2 className='subtitulo' style={{padding: 0, margin: 0}}>Não se preocupe, a sua denúncia será anônima</h2>
+          <h2 className='subtitulo' style={{ padding: 0, margin: 0 }}>Não se preocupe, a sua denúncia será anônima</h2>
         </div>
         <Form onSubmit={handleSubmit}>
           <InputField
@@ -125,9 +132,9 @@ export const NovaDenuncia: React.FC = () => {
             type="text"
             value={formData.descricao}
             placeholder="Nome completo"
-            onChange={(e) => setFormData({...formData, descricao: e.target.value })}
+            onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
             required
-            style={{ padding: '10px', border: '1px solid'}}
+            style={{ padding: '10px', border: '1px solid' }}
           />
           <InputField
             id="descricao"
@@ -137,7 +144,7 @@ export const NovaDenuncia: React.FC = () => {
             placeholder="Descreva o problema..."
             onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
             required
-            style={{ padding: '10px', border: '1px solid'}}
+            style={{ padding: '10px', border: '1px solid' }}
           />
 
           <EnderecoForm
