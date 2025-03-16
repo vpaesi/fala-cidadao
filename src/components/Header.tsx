@@ -5,12 +5,12 @@ import { AlertTriangle } from 'lucide-react';
 export const Header: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const isAuthenticated = localStorage.getItem('user'); // Verifica se o usuário está logado
+  const isAuthenticated = localStorage.getItem('user'); 
 
   const handleLogout = () => {
-    localStorage.removeItem('user'); // Remove o usuário logado do localStorage
+    localStorage.removeItem('user'); 
     alert('Você foi deslogado com sucesso!');
-    navigate('/login'); // Redireciona para a página de login
+    navigate('/login'); 
   };
 
   return (
@@ -39,7 +39,7 @@ export const Header: React.FC = () => {
             )}
             {!isAuthenticated && location.pathname !== '/cadastro' && (
               <Link to="/cadastro" className="hover:text-indigo-200 px-3 py-2 rounded-md">
-                Cadastro
+                Signup
               </Link>
             )}
             {!isAuthenticated && location.pathname !== '/login' && (
