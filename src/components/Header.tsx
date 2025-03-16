@@ -1,10 +1,17 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AlertTriangle } from 'lucide-react';
 
 export const Header: React.FC = () => {
   const location = useLocation();
-  const isAuthenticated = localStorage.getItem('user');
+  const navigate = useNavigate();
+  const isAuthenticated = localStorage.getItem('user'); // Verifica se o usuário está logado
+
+  const handleLogout = () => {
+    localStorage.removeItem('user'); // Remove o usuário logado do localStorage
+    alert('Você foi deslogado com sucesso!');
+    navigate('/login'); // Redireciona para a página de login
+  };
 
   return (
     <header className="bg-indigo-600 text-white shadow-lg">
@@ -39,6 +46,14 @@ export const Header: React.FC = () => {
               <Link to="/login" className="hover:text-indigo-200 px-3 py-2 rounded-md">
                 Login
               </Link>
+            )}
+            {isAuthenticated && (
+              <button
+                onClick={handleLogout}
+                className="hover:text-indigo-200 px-3 py-2 rounded-md bg-indigo-500 hover:bg-red-600 text-white"
+              >
+                Sair
+              </button>
             )}
           </div>
         </div>
