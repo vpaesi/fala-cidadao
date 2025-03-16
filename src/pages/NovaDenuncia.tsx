@@ -106,7 +106,7 @@ export const NovaDenuncia: React.FC = () => {
     try {
       const imagemUrl = imagemFile
         ? URL.createObjectURL(imagemFile)
-        : 'https://t4.ftcdn.net/jpg/04/99/93/31/360_F_499933117_ZAUBfv3P1HEOsZDrnkbNCt4jc3AodArl.jpg';
+        : 'https://picsum.photos/200/300';
 
       await addDenuncia({ ...formData, imagemUrl });
       navigate('/denuncias');
