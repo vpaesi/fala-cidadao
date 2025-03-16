@@ -1,52 +1,60 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEndereco } from '../hooks/useEndereco';
 import { InputField } from '../components/InputField';
+import { EnderecoForm } from '../components/EnderecoForm';
 
 export const SignupForm: React.FC = () => {
-  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     nome: '',
-    email: '',
-    senha: '',
     dob: '',
     cpf: '',
     telefone: '',
-    cep: '',
-    estado: '',
-    cidade: '',
-    bairro: '',
-});
+    confirmacaoSenha: '',
+    senha: '',
+  });
+
+  const {
+    estados,
+    cidades,
+    cepError,
+    formData: enderecoData,
+    setFormData: setEnderecoData,
+    fetchEstados,
+    handleCepChange,
+  } = useEndereco();
+
+  React.useEffect(() => {
+    fetchEstados();
+  }, [fetchEstados]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const fullFormData = { ...formData, ...enderecoData };
+    console.log('Dados de cadastro:', fullFormData);
+  };
 
-    const users = JSON.parse(localStorage.getItem('user') || '[]');
-    users.push(formData);
-    localStorage.setItem('user', JSON.stringify(users));
+  return (
+    <form onSubmit={handleSubmit}>
 
-    alert('Cadastro realizado com sucesso!');
-    navigate('/login');
-   };
-   
-   return (
-    <>
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <InputField
-          id="nome"
-          label="Nome Completo"
-          type="text"
-          value={formData.nome}
-          placeholder="Digite seu nome"
-          onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
-          required
-        />
-        <InputField
-        id='dob'
-        label='Data de Nascimento'
-        type='date'
-        value={formData.dob}
+      <h2>Dados Pessoais</h2>
+      <InputField
+        id="nome"
+        label="Nome Completo"
+        type="text"
+        value={formData.nome}
+        placeholder="Digite seu nome"
+        onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
         required
-        onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
+      />
+
+      <div className="grid grid-cols-2 gap-4">
+        <InputField
+          id="dob"
+          label="Data de Nascimento"
+          type="date"
+          value={formData.dob}
+          onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
+          required
         />
         <InputField
           id="cpf"
@@ -54,44 +62,71 @@ export const SignupForm: React.FC = () => {
           type="text"
           value={formData.cpf}
           placeholder="Digite seu CPF"
-          onChange={(e) => setFormData({...formData, cpf: e.target.value })}
+          onChange={(e) => setFormData({ ...formData, cpf: e.target.value })}
           required
         />
+
         <InputField
           id="telefone"
           label="Telefone"
           type="text"
           value={formData.telefone}
           placeholder="Digite seu telefone"
-          onChange={(e) => setFormData({...formData, telefone: e.target.value })}
+          onChange={(e) => setFormData({ ...formData, telefone: e.target.value })}
           required
         />
-       {/* EnderecoForm aqui */}
+
         <InputField
-          id="email"
-          label="Email"
-          type="email"
-          value={formData.email}
-          placeholder="Digite seu email"
-          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+          id="rg"
+          label="RG"
+          type='text'
+          value={formData.telefone}
+          placeholder="Digite seu RG"
+          onChange={(e) => setFormData({ ...formData, telefone: e.target.value })}
           required
         />
+
         <InputField
-          id="senha"
-          label="Senha"
-          type="password"
-          value={formData.senha}
-          placeholder="Digite sua senha"
-          onChange={(e) => setFormData({ ...formData, senha: e.target.value })}
-          required
-        />
-        <button
-          type="submit"
-          className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        >
-          Cadastrar
-        </button>
-      </form>
-      </>
+        id="senha"
+        label="Senha"
+        type="password"
+        value={formData.senha}
+        placeholder="Digite sua senha"
+        onChange={(e) => setFormData({ ...formData, senha: e.target.value })}
+        required
+      />
+
+      <InputField
+        id="confirmacaoSenha"
+        label="Confirmação de Senha"
+        type="password"
+        value={formData.confirmacaoSenha}
+        placeholder="Digite a senha"
+        onChange={(e) => setFormData({ ...formData, confirmacaoSenha: e.target.value })}
+        required
+      />
+      </div>
+
+      <h2 style={{marginTop: '2rem', paddingTop: '0.5rem', borderTop: '1px solid rgb(121, 121, 122)' }}>Endereço</h2>
+      <EnderecoForm
+        formData={enderecoData}
+        cep={enderecoData.cep}
+        cepError={cepError}
+        estados={estados}
+        cidades={cidades}
+        onCepChange={(e) => handleCepChange(e.target.value)}
+        onEstadoChange={(e) => setEnderecoData({ ...enderecoData, estado: e.target.value })}
+        onCidadeChange={(e) => setEnderecoData({ ...enderecoData, cidade: e.target.value })}
+        onInputChange={(field, value) => setEnderecoData({ ...enderecoData, [field]: value })}
+      />
+
+      <button
+        type="submit"
+        className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        style={{ marginTop: '2rem', border: '1px solid rgb(121, 121, 122)' }}
+      >
+        Cadastrar
+      </button>
+    </form>
   );
 };

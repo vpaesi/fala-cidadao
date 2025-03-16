@@ -8,97 +8,43 @@ import { Button } from '../components/Button';
 import { Form } from '../components/Form';
 import { PageLayout } from '../components/PageLayout';
 import { EnderecoForm } from '../components/EnderecoForm';
+import { useEndereco } from '../hooks/useEndereco';
 
 export const NovaDenuncia: React.FC = () => {
   const navigate = useNavigate();
-  const isAuthenticated = localStorage.getItem('user'); 
-  const users = JSON.parse(localStorage.getItem('users') || '[]');
+  const isAuthenticated = localStorage.getItem('user');
   const { addDenuncia, loading } = useDenuncias();
   const [formData, setFormData] = useState({
     titulo: '',
     descricao: '',
-    estado: '',
-    cidade: '',
-    rua: '',
-    numero: '',
-    complemento: '',
-    imagemUrl: '',
   });
   const [imagemFile, setImagemFile] = useState<File | null>(null);
-  const [cep, setCep] = useState('');
-  const [cepError, setCepError] = useState('');
-  const [estados, setEstados] = useState<string[]>([]);
-  const [cidades, setCidades] = useState<string[]>([]);
+
+  const {
+    estados,
+    cidades,
+    cepError,
+    formData: enderecoData,
+    setFormData: setEnderecoData,
+    fetchEstados,
+    handleCepChange,
+  } = useEndereco();
 
   useEffect(() => {
     if (!isAuthenticated) {
       alert('Por favor, faça o login primeiro.');
       navigate('/login');
     }
-  }, [isAuthenticated, navigate, users]);
+  }, [isAuthenticated, navigate]);
 
-  const fetchEstados = async () => {
-    try {
-      const response = await fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados');
-      const data = await response.json();
-      const estadosBrasil = data.map((estado: { sigla: string }) => estado.sigla);
-      setEstados(estadosBrasil);
-    } catch (error) {
-      console.error('Erro ao buscar estados:', error);
-    }
-  };
-
-  const fetchCidades = async (estado: string) => {
-    try {
-      const response = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${estado}/municipios`);
-      const data = await response.json();
-      const cidades = data.map((cidade: { nome: string }) => cidade.nome);
-      setCidades(cidades);
-    } catch (error) {
-      console.error('Erro ao buscar cidades:', error);
-    }
-  };
-
-  const handleCepChange = async (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const value = e.target.value;
-    setCep(value);
-
-    if (value.length === 8) {
-      try {
-        const response = await fetch(`https://viacep.com.br/ws/${value}/json/`);
-        const data = await response.json();
-
-        if (data.erro) {
-          setCepError('CEP inválido.');
-        } else {
-          setCepError('');
-          setFormData((prev) => ({
-            ...prev,
-            estado: data.uf,
-            cidade: data.localidade,
-            rua: data.logradouro,
-          }));
-          await fetchCidades(data.uf);
-        }
-      } catch {
-        setCepError('Erro ao buscar o CEP.');
-      }
-    } else {
-      setCepError('O CEP deve ter 8 dígitos.');
-    }
-  };
-
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setImagemFile(file);
-    }
-  };
+  useEffect(() => {
+    fetchEstados();
+  }, [fetchEstados]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.rua || !formData.estado || !formData.cidade) {
+    if (!enderecoData.rua || !enderecoData.estado || !enderecoData.cidade) {
       alert('Por favor, preencha o endereço completo.');
       return;
     }
@@ -108,33 +54,25 @@ export const NovaDenuncia: React.FC = () => {
         ? URL.createObjectURL(imagemFile)
         : 'https://picsum.photos/200/300';
 
-      await addDenuncia({ ...formData, imagemUrl });
+      await addDenuncia({ ...formData, ...enderecoData, imagemUrl });
       navigate('/denuncias');
     } catch (error) {
       console.error('Erro ao enviar denúncia:', error);
     }
   };
 
-  useEffect(() => {
-    fetchEstados();
-  }, []);
-
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8" style={{ border: '1px solid black', borderRadius: 8, boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', backgroundColor: 'white', marginTop: 20, marginBottom: 20, padding: 5 }} title='Nova Denúncia'>
+    <div className="max-w-2xl mx-auto px-4 py-8">
       <PageLayout title="Nova Denúncia">
-        <div className="mb-4" style={{ paddingBottom: 10, paddingTop: 0 }}>
-          <h2 className='subtitulo' style={{ padding: 0, margin: 0 }}>Não se preocupe, a sua denúncia será anônima</h2>
-        </div>
         <Form onSubmit={handleSubmit}>
           <InputField
             id="titulo"
             label="Dê um título à sua denúncia"
             type="text"
-            value={formData.descricao}
-            placeholder="Nome completo"
-            onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
+            value={formData.titulo}
+            placeholder="Digite o título"
+            onChange={(e) => setFormData({ ...formData, titulo: e.target.value })}
             required
-            style={{ padding: '10px', border: '1px solid' }}
           />
           <InputField
             id="descricao"
@@ -144,50 +82,25 @@ export const NovaDenuncia: React.FC = () => {
             placeholder="Descreva o problema..."
             onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
             required
-            style={{ padding: '10px', border: '1px solid' }}
           />
-
           <EnderecoForm
-            formData={formData}
-            cep={cep}
+            formData={enderecoData}
+            cep={enderecoData.cep}
             cepError={cepError}
             estados={estados}
             cidades={cidades}
-            onCepChange={handleCepChange}
-            onEstadoChange={(e) => {
-              const estado = e.target.value;
-              setFormData({ ...formData, estado });
-              fetchCidades(estado);
-            }}
-            onCidadeChange={(e) => setFormData({ ...formData, cidade: e.target.value })}
-            onInputChange={(field, value) => setFormData({ ...formData, [field]: value })}
+            onCepChange={(e) => handleCepChange(e.target.value)}
+            onEstadoChange={(e) => setEnderecoData({ ...enderecoData, estado: e.target.value })}
+            onCidadeChange={(e) => setEnderecoData({ ...enderecoData, cidade: e.target.value })}
+            onInputChange={(field, value) => setEnderecoData({ ...enderecoData, [field]: value })}
           />
-
-          <div>
-            <ImageUpload onChange={handleImageUpload} />
-          </div>
-
+          <ImageUpload onChange={(e) => setImagemFile(e.target.files?.[0] || null)} />
           <div className="flex justify-end space-x-4">
-            <Button
-              type="button"
-              onClick={() => navigate('/')}
-              className="bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
-            >
+            <Button type="button" onClick={() => navigate('/')} className="bg-white text-gray-700">
               Cancelar
             </Button>
-            <Button
-              type="submit"
-              disabled={loading}
-              className="bg-indigo-600 text-white hover:bg-indigo-700"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="animate-spin -ml-1 mr-2 h-5 w-5" />
-                  Enviando...
-                </>
-              ) : (
-                'Enviar Denúncia'
-              )}
+            <Button type="submit" disabled={loading} className="bg-indigo-600 text-white">
+              {loading ? <Loader2 className="animate-spin" /> : 'Enviar Denúncia'}
             </Button>
           </div>
         </Form>
