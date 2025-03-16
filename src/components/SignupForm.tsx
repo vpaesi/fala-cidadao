@@ -9,8 +9,8 @@ export const SignupForm: React.FC = () => {
     dob: '',
     cpf: '',
     telefone: '',
-    confirmacaoSenha: '',
     senha: '',
+    confirmacaoSenha: '',
   });
 
   const {
@@ -35,7 +35,6 @@ export const SignupForm: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-
       <h2>Dados Pessoais</h2>
       <InputField
         id="nome"
@@ -45,48 +44,32 @@ export const SignupForm: React.FC = () => {
         placeholder="Digite seu nome"
         onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
         required
+        pattern="^[a-zA-ZÀ-ÿ\s]+$"
+        title="O nome deve conter apenas letras e espaços."
       />
-
-      <div className="grid grid-cols-2 gap-4">
-        <InputField
-          id="dob"
-          label="Data de Nascimento"
-          type="date"
-          value={formData.dob}
-          onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
-          required
-        />
-        <InputField
-          id="cpf"
-          label="CPF"
-          type="text"
-          value={formData.cpf}
-          placeholder="Digite seu CPF"
-          onChange={(e) => setFormData({ ...formData, cpf: e.target.value })}
-          required
-        />
-
-        <InputField
-          id="telefone"
-          label="Telefone"
-          type="text"
-          value={formData.telefone}
-          placeholder="Digite seu telefone"
-          onChange={(e) => setFormData({ ...formData, telefone: e.target.value })}
-          required
-        />
-
-        <InputField
-          id="rg"
-          label="RG"
-          type='text'
-          value={formData.telefone}
-          placeholder="Digite seu RG"
-          onChange={(e) => setFormData({ ...formData, telefone: e.target.value })}
-          required
-        />
-
-        <InputField
+      <InputField
+        id="cpf"
+        label="CPF"
+        type="text"
+        value={formData.cpf}
+        placeholder="Digite seu CPF"
+        onChange={(e) => setFormData({ ...formData, cpf: e.target.value })}
+        required
+        pattern="^\d{11}$"
+        title="O CPF deve conter exatamente 11 números."
+      />
+      <InputField
+        id="telefone"
+        label="Telefone"
+        type="text"
+        value={formData.telefone}
+        placeholder="Digite seu telefone"
+        onChange={(e) => setFormData({ ...formData, telefone: e.target.value })}
+        required
+        pattern="^\d{10,11}$" 
+        title="O telefone deve conter 10 ou 11 números."
+      />
+      <InputField
         id="senha"
         label="Senha"
         type="password"
@@ -94,20 +77,23 @@ export const SignupForm: React.FC = () => {
         placeholder="Digite sua senha"
         onChange={(e) => setFormData({ ...formData, senha: e.target.value })}
         required
+        pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
+        title="A senha deve conter pelo menos 8 caracteres, incluindo letras e números."
       />
-
       <InputField
         id="confirmacaoSenha"
         label="Confirmação de Senha"
         type="password"
         value={formData.confirmacaoSenha}
-        placeholder="Digite a senha"
+        placeholder="Confirme sua senha"
         onChange={(e) => setFormData({ ...formData, confirmacaoSenha: e.target.value })}
         required
+        pattern={formData.senha}
+        title="A confirmação de senha deve ser igual à senha."
       />
-      </div>
-
-      <h2 style={{marginTop: '2rem', paddingTop: '0.5rem', borderTop: '1px solid rgb(121, 121, 122)' }}>Endereço</h2>
+      <h2 style={{ marginTop: '2rem', paddingTop: '0.5rem', borderTop: '1px solid rgb(121, 121, 122)' }}>
+        Endereço
+      </h2>
       <EnderecoForm
         formData={enderecoData}
         cep={enderecoData.cep}
@@ -119,7 +105,6 @@ export const SignupForm: React.FC = () => {
         onCidadeChange={(e) => setEnderecoData({ ...enderecoData, cidade: e.target.value })}
         onInputChange={(field, value) => setEnderecoData({ ...enderecoData, [field]: value })}
       />
-
       <button
         type="submit"
         className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"

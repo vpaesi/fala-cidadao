@@ -11,6 +11,8 @@ interface InputFieldProps {
   required?: boolean;
   style?: React.CSSProperties;
   errorMessage?: string;
+  pattern?: string;
+  title?: string;
 }
 
 export const InputField: React.FC<InputFieldProps> = ({
@@ -23,6 +25,8 @@ export const InputField: React.FC<InputFieldProps> = ({
   readOnly = false,
   required = false,
   errorMessage,
+  pattern,
+  title,
 }) => {
   return (
     <div className="mb-4">
@@ -55,7 +59,15 @@ export const InputField: React.FC<InputFieldProps> = ({
             onChange={onChange}
             readOnly={readOnly}
             required={required}
-            style={{ border: '1px solid black', borderRadius: 8, boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', height: '2rem', paddingLeft: '0.5rem'}}
+            pattern={pattern}
+            title={title}
+            style={{
+              border: '1px solid black',
+              borderRadius: 8,
+              boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+              height: '2rem',
+              paddingLeft: '0.5rem',
+            }}
           />
         )}
       </div>
