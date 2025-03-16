@@ -3,7 +3,7 @@ import React from 'react';
 interface InputFieldProps {
   id: string;
   label: string;
-  type?: 'text' | 'textarea' | 'email' | 'password';
+  type?: 'text' | 'textarea' | 'email' | 'password' | 'date';
   value: string;
   placeholder?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
