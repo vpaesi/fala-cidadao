@@ -36,6 +36,11 @@ export const useEndereco = () => {
   };
 
   const handleCepChange = async (cep: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      cep,
+    }));
+
     if (cep.length === 8) {
       try {
         const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
@@ -47,7 +52,6 @@ export const useEndereco = () => {
           setCepError('');
           setFormData((prev) => ({
             ...prev,
-            cep, // Atualiza o campo 'cep'
             estado: data.uf,
             cidade: data.localidade,
             rua: data.logradouro,
@@ -58,7 +62,7 @@ export const useEndereco = () => {
         setCepError('Erro ao buscar o CEP.');
       }
     } else {
-      setCepError('O CEP deve ter 8 dígitos.');
+      setCepError('');
     }
   };
 

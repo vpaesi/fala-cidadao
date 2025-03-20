@@ -30,6 +30,22 @@ export const EnderecoForm: React.FC<EnderecoFormProps> = ({
     onCidadeChange,
     onInputChange,
 }) => {
+    async function fetchCidades(estado: string) {
+        if (!estado) return;
+
+        try {
+            const response = await fetch(`/api/cidades?estado=${estado}`);
+            if (!response.ok) {
+                throw new Error('Erro ao buscar cidades');
+            }
+            const cidades = await response.json();
+            onInputChange('cidade', '');
+            onInputChange('cidades', cidades);
+        } catch (error) {
+            console.error('Erro ao carregar cidades:', error);
+        }
+    }
+
     return (
         <>
             <div className="grid grid-cols-2 gap-4">
@@ -50,7 +66,10 @@ export const EnderecoForm: React.FC<EnderecoFormProps> = ({
                     <select
                         id="estado"
                         value={formData.estado}
-                        onChange={onEstadoChange}
+                        onChange={(e) => {
+                            onEstadoChange(e);
+                            fetchCidades(e.target.value);
+                        }}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                         required
                         style={{ border: "1px solid black", padding: "0.5rem" }}

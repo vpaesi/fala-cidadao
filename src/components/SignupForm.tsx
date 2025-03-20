@@ -44,20 +44,26 @@ export const SignupForm: React.FC = () => {
         placeholder="Digite seu nome"
         onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
         required
-        pattern="^[a-zA-ZÀ-ÿ\s]+$"
-        title="O nome deve conter apenas letras e espaços."
       />
-      <InputField
-        id="cpf"
-        label="CPF"
-        type="text"
-        value={formData.cpf}
-        placeholder="Digite seu CPF"
-        onChange={(e) => setFormData({ ...formData, cpf: e.target.value })}
-        required
-        pattern="^\d{11}$"
-        title="O CPF deve conter exatamente 11 números."
-      />
+      <div className="grid grid-cols-2 gap-4">
+        <InputField
+          id="dob"
+          label="Data de Nascimento"
+          type="date"
+          value={formData.dob}
+          onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
+          required
+        />
+        <InputField
+          id="cpf"
+          label="CPF"
+          type="text"
+          value={formData.cpf}
+          placeholder="Digite seu CPF"
+          onChange={(e) => setFormData({ ...formData, cpf: e.target.value })}
+          required
+        />
+      </div>
       <InputField
         id="telefone"
         label="Telefone"
@@ -66,8 +72,6 @@ export const SignupForm: React.FC = () => {
         placeholder="Digite seu telefone"
         onChange={(e) => setFormData({ ...formData, telefone: e.target.value })}
         required
-        pattern="^\d{10,11}$" 
-        title="O telefone deve conter 10 ou 11 números."
       />
       <InputField
         id="senha"
@@ -77,8 +81,6 @@ export const SignupForm: React.FC = () => {
         placeholder="Digite sua senha"
         onChange={(e) => setFormData({ ...formData, senha: e.target.value })}
         required
-        pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
-        title="A senha deve conter pelo menos 8 caracteres, incluindo letras e números."
       />
       <InputField
         id="confirmacaoSenha"
@@ -88,8 +90,6 @@ export const SignupForm: React.FC = () => {
         placeholder="Confirme sua senha"
         onChange={(e) => setFormData({ ...formData, confirmacaoSenha: e.target.value })}
         required
-        pattern={formData.senha}
-        title="A confirmação de senha deve ser igual à senha."
       />
       <h2 style={{ marginTop: '2rem', paddingTop: '0.5rem', borderTop: '1px solid rgb(121, 121, 122)' }}>
         Endereço
