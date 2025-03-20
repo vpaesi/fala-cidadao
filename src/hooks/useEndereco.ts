@@ -13,7 +13,7 @@ export const useEndereco = () => {
     complemento: '',
   });
 
-  const fetchEstados = async () => {
+  const fetchEstados = async (): Promise<void> => {
     try {
       const response = await fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados');
       const data = await response.json();
@@ -24,7 +24,7 @@ export const useEndereco = () => {
     }
   };
 
-  const fetchCidades = async (estado: string) => {
+  const fetchCidades = async (estado: string): Promise<void> => {
     try {
       const response = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${estado}/municipios`);
       const data = await response.json();

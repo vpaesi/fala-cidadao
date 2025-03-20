@@ -39,7 +39,7 @@ export const EnderecoForm: React.FC<EnderecoFormProps> = ({
                     type="text"
                     value={cep}
                     placeholder="Digite o CEP"
-                    onChange={onCepChange}
+                    onChange={(e) => onCepChange(e as React.ChangeEvent<HTMLInputElement>)}
                     required
                     errorMessage={cepError}
                 />
