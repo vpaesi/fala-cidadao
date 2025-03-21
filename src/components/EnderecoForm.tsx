@@ -67,8 +67,9 @@ export const EnderecoForm: React.FC<EnderecoFormProps> = ({
                         id="estado"
                         value={formData.estado}
                         onChange={(e) => {
+                            const estadoSelecionado = e.target.value; this
                             onEstadoChange(e);
-                            fetchCidades(e.target.value);
+                            fetchCidades(estadoSelecionado)
                         }}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                         required

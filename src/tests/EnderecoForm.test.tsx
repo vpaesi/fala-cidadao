@@ -1,48 +1,118 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { EnderecoForm } from '../components/EnderecoForm';
 
 describe('EnderecoForm', () => {
-  const mockProps = {
-    formData: {
-      estado: '',
-      cidade: '',
-      rua: '',
-      numero: '',
-      complemento: '',
-    },
-    cep: '',
-    cepError: '',
-    estados: ['SP', 'RJ'],
-    cidades: ['São Paulo', 'Rio de Janeiro'],
-    onCepChange: jest.fn(),
-    onEstadoChange: jest.fn(),
-    onCidadeChange: jest.fn(),
-    onInputChange: jest.fn(),
-  };
+    const mockProps = {
+        formData: {
+            estado: '',
+            cidade: '',
+            rua: '',
+            numero: '',
+            complemento: '',
+        },
+        cep: '',
+        cepError: '',
+        estados: ['SP', 'RJ', 'MG'],
+        cidades: ['São Paulo', 'Rio de Janeiro'],
+        onCepChange: jest.fn(),
+        onEstadoChange: jest.fn(),
+        onCidadeChange: jest.fn(),
+        onInputChange: jest.fn(),
+    };
 
-  it('deve renderizar os campos de endereço', () => {
-    render(<EnderecoForm {...mockProps} />);
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
 
-    expect(screen.getByLabelText('CEP')).toBeInTheDocument();
-    expect(screen.getByLabelText('Estado')).toBeInTheDocument();
-    expect(screen.getByLabelText('Cidade')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Ex.: Avenida das Flores')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Ex. 321')).toBeInTheDocument();
-  });
+    it('should render all input fields and dropdowns', () => {
+        render(<EnderecoForm {...mockProps} />);
 
-  it('deve chamar onCepChange ao alterar o CEP', () => {
-    render(<EnderecoForm {...mockProps} />);
+        expect(screen.getByLabelText('CEP')).toBeInTheDocument();
+        expect(screen.getByLabelText('Estado')).toBeInTheDocument();
+        expect(screen.getByLabelText('Cidade')).toBeInTheDocument();
+        expect(screen.getByPlaceholderText('Ex.: Avenida das Flores')).toBeInTheDocument();
+        expect(screen.getByPlaceholderText('Ex. 321')).toBeInTheDocument();
+        expect(screen.getByPlaceholderText('Ex.: Ap. 123 - Torre A')).toBeInTheDocument();
+    });
 
-    const cepInput = screen.getByLabelText('CEP');
-    fireEvent.change(cepInput, { target: { value: '12345678' } });
+    it('should call onCepChange when typing in the CEP field', () => {
+        render(<EnderecoForm {...mockProps} />);
 
-    expect(mockProps.onCepChange).toHaveBeenCalledTimes(1);
-  });
+        const cepInput = screen.getByLabelText('CEP');
+        fireEvent.change(cepInput, { target: { value: '12345-678' } });
 
-  it('deve exibir uma mensagem de erro para o CEP', () => {
-    render(<EnderecoForm {...mockProps} cepError="CEP inválido" />);
+        expect(mockProps.onCepChange).toHaveBeenCalledTimes(1);
+    });
 
-    expect(screen.getByText('CEP inválido')).toBeInTheDocument();
-  });
+    it('should call onEstadoChange and fetchCidades when selecting a state', async () => {
+        render(<EnderecoForm {...mockProps} />);
+
+        const estadoSelect = screen.getByLabelText('Estado');
+        fireEvent.change(estadoSelect, { target: { value: 'SP' } });
+
+        expect(mockProps.onEstadoChange).toHaveBeenCalledTimes(1);
+        await waitFor(() => {
+            expect(mockProps.onInputChange).toHaveBeenCalledWith('cidade', '');
+        });
+    });
+
+    it('should call onCidadeChange when selecting a city', () => {
+        render(<EnderecoForm {...mockProps} />);
+
+        const cidadeSelect = screen.getByLabelText('Cidade');
+        fireEvent.change(cidadeSelect, { target: { value: 'São Paulo' } });
+
+        expect(mockProps.onCidadeChange).toHaveBeenCalledTimes(1);
+    });
+
+    it('should call onInputChange when typing in the complemento field', () => {
+        render(<EnderecoForm {...mockProps} />);
+
+        const complementoInput = screen.getByPlaceholderText('Ex.: Ap. 123 - Torre A');
+        fireEvent.change(complementoInput, { target: { value: 'Apto 101' } });
+
+        expect(mockProps.onInputChange).toHaveBeenCalledWith('complemento', 'Apto 101');
+    });
+
+    it('should display an error message for CEP when provided', () => {
+        render(<EnderecoForm {...mockProps} cepError="CEP inválido" />);
+
+        expect(screen.getByText('CEP inválido')).toBeInTheDocument();
+    });
+
+    it('should not call fetchCidades if no state is selected', async () => {
+        render(<EnderecoForm {...mockProps} />);
+
+        const estadoSelect = screen.getByLabelText('Estado');
+        fireEvent.change(estadoSelect, { target: { value: '' } });
+
+        expect(mockProps.onEstadoChange).toHaveBeenCalledTimes(1);
+        await waitFor(() => {
+            expect(mockProps.onInputChange).not.toHaveBeenCalledWith('cidade', '');
+        });
+    });
+
+    it('should handle API errors gracefully when fetching cities', async () => {
+        const consoleErrorMock = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+        global.fetch = jest.fn(() =>
+            Promise.reject(new Error('Erro ao buscar cidades'))
+        );
+
+        render(<EnderecoForm {...mockProps} />);
+
+        const estadoSelect = screen.getByLabelText('Estado');
+        fireEvent.change(estadoSelect, { target: { value: 'SP' } });
+
+        await waitFor(() => {
+            expect(consoleErrorMock).toHaveBeenCalledWith(
+                'Erro ao carregar cidades:',
+                expect.any(Error)
+            );
+        });
+
+        consoleErrorMock.mockRestore();
+        jest.restoreAllMocks();
+    });
 });
