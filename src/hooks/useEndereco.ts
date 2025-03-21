@@ -28,8 +28,13 @@ export const useEndereco = () => {
     try {
       const response = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${estado}/municipios`);
       const data = await response.json();
-      const cidades = data.map((cidade: { nome: string }) => cidade.nome);
-      setCidades(cidades);
+
+      if (Array.isArray(data)) {
+        const cidades = data.map((cidade: { nome: string }) => cidade.nome);
+        setCidades(cidades);
+      } else {
+        throw new Error('Resposta inesperada da API');
+      }
     } catch (error) {
       console.error('Erro ao buscar cidades:', error);
     }

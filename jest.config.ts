@@ -1,18 +1,18 @@
 export default {
-  preset: 'ts-jest/presets/default-esm', // Configuração para ES Modules
+  preset: 'ts-jest/presets/default-esm',
   testEnvironment: 'jsdom',
   moduleNameMapper: {
-    '\\.(css|less|scss|sass)$': 'identity-obj-proxy', // Mapeia estilos para evitar erros
+    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
   },
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'], // Configuração adicional para testes
-  extensionsToTreatAsEsm: ['.ts', '.tsx'], // Trata arquivos .ts e .tsx como ES Modules
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'], 
+  extensionsToTreatAsEsm: ['.ts', '.tsx'],
   transform: {
     '^.+\\.tsx?$': [
       'ts-jest',
       {
-        useESM: true, // Ativa suporte a ES Modules
+        useESM: true,
       },
     ],
   },
-  testPathIgnorePatterns: ['/node_modules/', '/dist/'], // Ignora pastas desnecessárias
+  testPathIgnorePatterns: ['/node_modules/', '/dist/'],
 };
