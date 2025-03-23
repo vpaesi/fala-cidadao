@@ -1,3 +1,3 @@
 export function validarSenha(senha: string): boolean {
-    return senha.length >= 6;
-  }
+  return senha.length >= 6;
+}

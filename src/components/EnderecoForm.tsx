@@ -1,5 +1,6 @@
 import React from 'react';
 import { InputField } from './InputField';
+import { fetchCidadesPorEstado } from '../util/fetchCidadesPorEstado';
 
 interface EnderecoFormProps {
     formData: {
@@ -33,21 +34,16 @@ export const EnderecoForm: React.FC<EnderecoFormProps> = ({
     async function fetchCidades(estado: string) {
         if (!estado) return;
 
-        try {
-            const response = await fetch(`/api/cidades?estado=${estado}`);
-            if (!response.ok) {
-                throw new Error('Erro ao buscar cidades');
-            }
-            const cidades = await response.json();
-            onInputChange('cidade', '');
-            onInputChange('cidades', cidades);
-        } catch (error) {
-            console.error('Erro ao carregar cidades:', error);
-        }
+        await fetchCidadesPorEstado(estado, onInputChange);
     }
 
     return (
         <>
+            <div className="grid">
+                <h2 style={{ marginTop: '2rem', marginBottom: '1rem', paddingTop: '0.5rem', borderTop: '1px solid rgb(121, 121, 122)' }}>
+                    Endereço
+                </h2>
+            </div>
             <div className="grid grid-cols-2 gap-4">
                 <InputField
                     id="cep"
@@ -113,13 +109,13 @@ export const EnderecoForm: React.FC<EnderecoFormProps> = ({
                         ))}
                     </select>
                     <InputField
-                    id="complemento"
-                    label=""
-                    value={formData.complemento}
-                    placeholder="Ex.: Ap. 123 - Torre A"
-                    onChange={(e) => onInputChange('complemento', e.target.value)}
-                    style={{ border: "1px solid black", padding: "0.5rem" }}
-                />
+                        id="complemento"
+                        label=""
+                        value={formData.complemento}
+                        placeholder="Ex.: Ap. 123 - Torre A"
+                        onChange={(e) => onInputChange('complemento', e.target.value)}
+                        style={{ border: "1px solid black", padding: "0.5rem" }}
+                    />
                 </div>
             </div>
 
@@ -130,7 +126,7 @@ export const EnderecoForm: React.FC<EnderecoFormProps> = ({
                         label="Logradouro"
                         placeholder="Ex.: Avenida das Flores"
                         value={formData.rua}
-                        onChange={() => {}}
+                        onChange={() => { }}
                         readOnly
                         required
                         style={{ border: "1px solid black", padding: "0.5rem" }}

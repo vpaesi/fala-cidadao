@@ -1,11 +1,15 @@
 import { useState } from 'react';
+import { validarCEP } from '../util/validarCEP';
+import { fetchEstados as fetchEstadosUtil } from '../util/fetchEstados';
+import { fetchCidades as fetchCidadesUtil } from '../util/fetchCidades';
+import { handleCepChange as handleCepChangeUtil } from '../util/handleCepChange';
 
 export const useEndereco = () => {
   const [estados, setEstados] = useState<string[]>([]);
   const [cidades, setCidades] = useState<string[]>([]);
   const [cepError, setCepError] = useState('');
   const [formData, setFormData] = useState({
-    cep: '', 
+    cep: '',
     estado: '',
     cidade: '',
     rua: '',
@@ -15,9 +19,7 @@ export const useEndereco = () => {
 
   const fetchEstados = async (): Promise<void> => {
     try {
-      const response = await fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados');
-      const data = await response.json();
-      const estadosBrasil = data.map((estado: { sigla: string }) => estado.sigla);
+      const estadosBrasil = await fetchEstadosUtil();
       setEstados(estadosBrasil);
     } catch (error) {
       console.error('Erro ao buscar estados:', error);
@@ -26,48 +28,10 @@ export const useEndereco = () => {
 
   const fetchCidades = async (estado: string): Promise<void> => {
     try {
-      const response = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${estado}/municipios`);
-      const data = await response.json();
-
-      if (Array.isArray(data)) {
-        const cidades = data.map((cidade: { nome: string }) => cidade.nome);
-        setCidades(cidades);
-      } else {
-        throw new Error('Resposta inesperada da API');
-      }
+      const cidades = await fetchCidadesUtil(estado);
+      setCidades(cidades);
     } catch (error) {
       console.error('Erro ao buscar cidades:', error);
-    }
-  };
-
-  const handleCepChange = async (cep: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      cep,
-    }));
-
-    if (cep.length === 8) {
-      try {
-        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-        const data = await response.json();
-
-        if (data.erro) {
-          setCepError('CEP inválido.');
-        } else {
-          setCepError('');
-          setFormData((prev) => ({
-            ...prev,
-            estado: data.uf,
-            cidade: data.localidade,
-            rua: data.logradouro,
-          }));
-          await fetchCidades(data.uf);
-        }
-      } catch {
-        setCepError('Erro ao buscar o CEP.');
-      }
-    } else {
-      setCepError('');
     }
   };
 
@@ -79,6 +43,6 @@ export const useEndereco = () => {
     setFormData,
     fetchEstados,
     fetchCidades,
-    handleCepChange,
+    handleCepChange: (cep: string) => handleCepChangeUtil(cep, setFormData, setCepError),
   };
 };

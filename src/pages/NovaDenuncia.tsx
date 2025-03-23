@@ -9,6 +9,7 @@ import { Form } from '../components/Form';
 import { PageLayout } from '../components/PageLayout';
 import { EnderecoForm } from '../components/EnderecoForm';
 import { useEndereco } from '../hooks/useEndereco';
+import { handleSubmitDenuncia } from '../util/handleSubmitDenuncia';
 
 export const NovaDenuncia: React.FC = () => {
   const navigate = useNavigate();
@@ -41,24 +42,8 @@ export const NovaDenuncia: React.FC = () => {
     fetchEstados();
   }, [fetchEstados]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!enderecoData.rua || !enderecoData.estado || !enderecoData.cidade) {
-      alert('Por favor, preencha o endereço completo.');
-      return;
-    }
-
-    try {
-      const imagemUrl = imagemFile
-        ? URL.createObjectURL(imagemFile)
-        : 'https://picsum.photos/200/300';
-
-      await addDenuncia({ ...formData, ...enderecoData, imagemUrl });
-      navigate('/denuncias');
-    } catch (error) {
-      console.error('Erro ao enviar denúncia:', error);
-    }
+  const handleSubmit = (e: React.FormEvent) => {
+    handleSubmitDenuncia(e, formData, enderecoData, imagemFile, addDenuncia, navigate);
   };
 
   return (

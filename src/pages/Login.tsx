@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { autenticarUsuario } from './../util/autenticarUsuario';
 
 export const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -11,19 +12,16 @@ export const Login: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const users = JSON.parse(localStorage.getItem('users') || '[]'); 
-    const userExists = users.find(
-      (user: { email: string; senha: string }) =>
-        user.email === formData.email && user.senha === formData.senha
-    );
+    const { success, user, message } = autenticarUsuario(formData.email, formData.senha);
 
-    if (userExists) {
-      localStorage.setItem('user', JSON.stringify(userExists)); 
+    if (success && user) {
+      localStorage.setItem('user', JSON.stringify(user));
       navigate('/denuncias');
     } else {
-      alert('Usuário não cadastrado. Por favor, faça o cadastro primeiro.');
+      alert(message);
     }
   };
+
 
   return (
     <div

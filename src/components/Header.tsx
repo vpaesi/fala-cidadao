@@ -5,12 +5,12 @@ import { AlertTriangle } from 'lucide-react';
 export const Header: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const isAuthenticated = localStorage.getItem('user'); 
+  const isAuthenticated = localStorage.getItem('user');
 
   const handleLogout = () => {
-    localStorage.removeItem('user'); 
+    localStorage.removeItem('user');
     alert('Você foi deslogado com sucesso!');
-    navigate('/login'); 
+    navigate('/login');
   };
 
   return (

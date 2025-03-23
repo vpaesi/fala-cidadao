@@ -3,23 +3,14 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { MapPin } from 'lucide-react';
 import { useDenuncias } from '../context/DenunciasContext';
-import { LoadingSpinner } from '../components/LoadingSpinner';
 import { Card } from '../components/Card';
+import { LoadingScreen } from '../components/LoadingScreen';
 
 export const ListaDenuncias: React.FC = () => {
   const { denuncias, loading } = useDenuncias();
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-
-        if (loading) {
-
-          <div className="flex items-center justify-center min-h-screen">
-            <LoadingSpinner size={48} color="text-indigo-600" />
-          </div>
-        }      </div>
-    );
+    return <LoadingScreen />;
   }
 
   return (

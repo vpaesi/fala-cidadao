@@ -20,9 +20,8 @@ export const Button: React.FC<ButtonProps> = ({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`inline-flex items-center px-4 py-2 text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 ${className} ${
-        disabled ? 'opacity-50 cursor-not-allowed' : ''
-      }`}
+      className={`inline-flex items-center px-4 py-2 text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 ${className} ${disabled ? 'opacity-50 cursor-not-allowed' : ''
+        }`}
     >
       {children}
     </button>

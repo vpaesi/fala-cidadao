@@ -22,7 +22,7 @@ export const DenunciasProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         id: crypto.randomUUID(),
         dataCriacao: new Date().toISOString(),
       };
-      
+
       setDenuncias(prev => [...prev, denuncia]);
     } catch (error) {
       console.error('Erro ao adicionar denúncia:', error);
