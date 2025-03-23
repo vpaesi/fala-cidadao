@@ -73,7 +73,7 @@ export const EnderecoForm: React.FC<EnderecoFormProps> = ({
                         }}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                         required
-                        style={{ border: "1px solid black", padding: "0.5rem" }}
+                        style={{ height: '2.5rem', border: "1px solid black", padding: "0.5rem" }}
                     >
                         <option value="">Selecione o estado</option>
                         {estados.map((estado) => (
@@ -103,7 +103,7 @@ export const EnderecoForm: React.FC<EnderecoFormProps> = ({
                         onChange={onCidadeChange}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                         required
-                        style={{ border: "1px solid black", padding: "0.5rem" }}
+                        style={{ height: '2.5rem', border: "1px solid black", padding: "0.5rem" }}
                     >
                         <option value="">Selecione a cidade</option>
                         {cidades.map((cidade) => (

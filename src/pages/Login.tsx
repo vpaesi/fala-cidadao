@@ -11,15 +11,15 @@ export const Login: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const users = JSON.parse(localStorage.getItem('users') || '[]'); // Obtém os usuários cadastrados
+    const users = JSON.parse(localStorage.getItem('users') || '[]'); 
     const userExists = users.find(
       (user: { email: string; senha: string }) =>
         user.email === formData.email && user.senha === formData.senha
     );
 
     if (userExists) {
-      localStorage.setItem('user', JSON.stringify(userExists)); // Salva o usuário logado no localStorage
-      navigate('/denuncias'); // Redireciona para a página de denúncias
+      localStorage.setItem('user', JSON.stringify(userExists)); 
+      navigate('/denuncias');
     } else {
       alert('Usuário não cadastrado. Por favor, faça o cadastro primeiro.');
     }

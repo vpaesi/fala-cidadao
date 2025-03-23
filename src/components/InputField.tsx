@@ -22,6 +22,7 @@ export const InputField: React.FC<InputFieldProps> = ({
   onChange,
   readOnly = false,
   required = false,
+  style,
   errorMessage,
 }) => {
   return (
@@ -29,42 +30,25 @@ export const InputField: React.FC<InputFieldProps> = ({
       <label htmlFor={id} className="block text-sm font-medium text-gray-700">
         {label}
       </label>
-      <div>
-        {type === 'textarea' ? (
-          <textarea
-            id={id}
-            className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${
-              errorMessage ? 'border-red-500' : ''
-            }`}
-            placeholder={placeholder}
-            value={value}
-            onChange={onChange}
-            readOnly={readOnly}
-            required={required}
-            rows={4}
-          />
-        ) : (
-          <input
-            type={type}
-            id={id}
-            className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${
-              errorMessage ? 'border-red-500' : ''
-            }`}
-            placeholder={placeholder}
-            value={value}
-            onChange={onChange}
-            readOnly={readOnly}
-            required={required}           
-            style={{
-              border: '1px solid black',
-              borderRadius: 8,
-              boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-              height: '2rem',
-              paddingLeft: '0.5rem',
-            }}
-          />
-        )}
-      </div>
+      <input
+        type={type}
+        id={id}
+        className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${
+          errorMessage ? 'border-red-500' : 'border-gray-700'
+        } hover:border-black`}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        readOnly={readOnly}
+        required={required}
+        style={{
+          ...style,
+          height: '2.5rem',
+          border: `1px solid ${errorMessage ? 'red' : 'currentColor'}`, // Borda na cor do texto
+          color: 'currentColor', // Garante que o texto e a borda tenham a mesma cor
+          padding: '0.5rem',
+        }}
+      />
       {errorMessage && <p className="text-red-500 text-sm mt-1">{errorMessage}</p>}
     </div>
   );
