@@ -15,4 +15,12 @@ export default {
     ],
   },
   testPathIgnorePatterns: ['/node_modules/', '/dist/'],
+  collectCoverage: true,
+  collectCoverageFrom: [
+    "src/**/*.{ts,tsx}",
+    "!src/**/*.d.ts",
+    "!src/**/index.ts",
+  ],
+  coverageDirectory: "coverage",
+  coverageReporters: ["html", "text"],
 };
