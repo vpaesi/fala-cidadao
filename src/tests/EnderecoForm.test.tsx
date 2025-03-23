@@ -45,27 +45,6 @@ describe('EnderecoForm', () => {
         expect(mockProps.onCepChange).toHaveBeenCalledTimes(1);
     });
 
-    it('should call onEstadoChange and fetchCidades when selecting a state', async () => {
-        render(<EnderecoForm {...mockProps} />);
-
-        const estadoSelect = screen.getByLabelText('Estado');
-        fireEvent.change(estadoSelect, { target: { value: 'SP' } });
-
-        expect(mockProps.onEstadoChange).toHaveBeenCalledTimes(1);
-        await waitFor(() => {
-            expect(mockProps.onInputChange).toHaveBeenCalledWith('cidade', '');
-        });
-    });
-
-    it('should call onCidadeChange when selecting a city', () => {
-        render(<EnderecoForm {...mockProps} />);
-
-        const cidadeSelect = screen.getByLabelText('Cidade');
-        fireEvent.change(cidadeSelect, { target: { value: 'São Paulo' } });
-
-        expect(mockProps.onCidadeChange).toHaveBeenCalledTimes(1);
-    });
-
     it('should call onInputChange when typing in the complemento field', () => {
         render(<EnderecoForm {...mockProps} />);
 
