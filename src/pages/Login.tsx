@@ -19,9 +19,11 @@ export const Login: React.FC = () => {
       navigate('/denuncias');
     } else {
       alert(message);
+      if (message === "Usuário não cadastrado. Por favor, faça o cadastro primeiro.") {
+        navigate('/cadastro'); // Redireciona para a página de cadastro
+      }
     }
   };
-
 
   return (
     <div

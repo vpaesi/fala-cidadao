@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useEndereco } from '../hooks/useEndereco';
 import { EnderecoForm } from '../components/EnderecoForm';
 import { validarFormulario } from '../util/validarFormulario';
-import { DadosPessoaisForm } from '../components/DadosPessoaisform';
+import { DadosPessoaisForm } from '../components/DadosPessoaisForm';
 import { handleSubmitCadastro } from '../util/handleSubmitCadastro';
 
 export const SignupForm: React.FC = () => {
@@ -32,12 +32,14 @@ export const SignupForm: React.FC = () => {
     fetchEstados();
   }, [fetchEstados]);
 
-  const validaFormulario = validarFormulario(formData, enderecoData, setErrors);
-
   const handleSubmit = (e: React.FormEvent) => {
-    handleSubmitCadastro(e, validaFormulario, formData, enderecoData, () => {
-      window.location.href = '/login';
-    });
+    e.preventDefault();
+    const isValid = validarFormulario(formData, enderecoData, setErrors);
+    if (isValid) {
+      handleSubmitCadastro(e, formData, enderecoData, () => {
+        window.location.href = "/login";
+      });
+    }
   };
 
   return (

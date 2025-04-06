@@ -1,16 +1,15 @@
 import React from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { AlertTriangle } from 'lucide-react';
 
 export const Header: React.FC = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   const isAuthenticated = localStorage.getItem('user');
 
   const handleLogout = () => {
-    localStorage.removeItem('user');
-    alert('Você foi deslogado com sucesso!');
-    navigate('/login');
+    if (!localStorage.getItem("user")) return;
+    localStorage.removeItem("user");
+    window.location.reload();
   };
 
   return (

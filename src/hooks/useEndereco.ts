@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { validarCEP } from '../util/validarCEP';
 import { fetchEstados as fetchEstadosUtil } from '../util/fetchEstados';
 import { fetchCidades as fetchCidadesUtil } from '../util/fetchCidades';
 import { handleCepChange as handleCepChangeUtil } from '../util/handleCepChange';

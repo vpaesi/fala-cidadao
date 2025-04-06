@@ -4,7 +4,7 @@ import { Loader2 } from 'lucide-react';
 import { useDenuncias } from '../context/DenunciasContext';
 import { InputField } from '../components/InputField';
 import { ImageUpload } from '../components/ImageUpload';
-import { Button } from '../components/Button';
+import Button from '../components/Button';
 import { Form } from '../components/Form';
 import { PageLayout } from '../components/PageLayout';
 import { EnderecoForm } from '../components/EnderecoForm';

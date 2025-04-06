@@ -1,8 +1,14 @@
 import '@testing-library/jest-dom';
 
 // Mock global fetch
-global.fetch = jest.fn(() =>
+global.fetch = jest.fn((url) =>
   Promise.resolve({
-    json: () => Promise.resolve([]), // Retorna um array vazio como padrão
+    ok: true,
+    json: () => {
+      if (url.includes("/api/cidades")) {
+        return Promise.resolve(["Cidade1", "Cidade2"]);
+      }
+      return Promise.resolve([]);
+    },
   })
 ) as jest.Mock;

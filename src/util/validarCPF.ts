@@ -1,9 +1,9 @@
 export function validarCPF(cpf: string): boolean {
-  cpf = cpf.replace(/\.|-/g, "");
+  cpf = cpf.replace(/\D/g, ""); // Remove caracteres não numéricos
 
   if (cpf.length !== 11) return false;
 
-  const numerosRepetidos = [
+  const numerosRepetidos = new Set([
     "00000000000",
     "11111111111",
     "22222222222",
@@ -14,9 +14,8 @@ export function validarCPF(cpf: string): boolean {
     "77777777777",
     "88888888888",
     "99999999999",
-  ];
-
-  if (numerosRepetidos.includes(cpf)) return false;
+  ]);
+  if (numerosRepetidos.has(cpf)) return false;
 
   const validarDigito = (tamanho: number) => {
     let soma = 0;

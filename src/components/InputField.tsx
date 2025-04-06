@@ -33,8 +33,9 @@ export const InputField: React.FC<InputFieldProps> = ({
       <input
         type={type}
         id={id}
-        className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${errorMessage ? 'border-red-500' : 'border-gray-700'
-          } hover:border-black`}
+        className={`mt-1 block w-full rounded-md shadow-sm focus:ring-indigo-500 ${
+          errorMessage ? 'border-red-500 focus:border-red-500' : 'border-gray-300 focus:border-indigo-500'
+        }`}
         placeholder={placeholder}
         value={value}
         onChange={onChange}
@@ -44,7 +45,6 @@ export const InputField: React.FC<InputFieldProps> = ({
           ...style,
           height: '2.5rem',
           border: `1px solid ${errorMessage ? 'red' : 'currentColor'}`,
-          color: 'currentColor',
           padding: '0.5rem',
         }}
       />

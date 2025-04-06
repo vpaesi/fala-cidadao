@@ -25,6 +25,10 @@ describe('EnderecoForm', () => {
         jest.clearAllMocks();
     });
 
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
     it('should render all input fields and dropdowns', () => {
         render(<EnderecoForm {...mockProps} />);
 

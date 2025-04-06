@@ -1,6 +1,6 @@
 import React from 'react';
 import { InputField } from './InputField';
-import { fetchCidadesPorEstado } from '../util/fetchCidadesPorEstado';
+import { fetchCidades } from "../util/fetchCidades";
 
 interface EnderecoFormProps {
     formData: {
@@ -31,11 +31,16 @@ export const EnderecoForm: React.FC<EnderecoFormProps> = ({
     onCidadeChange,
     onInputChange,
 }) => {
-    async function fetchCidades(estado: string) {
-        if (!estado) return;
-
-        await fetchCidadesPorEstado(estado, onInputChange);
-    }
+    const handleEstadoChange = async (estado: string) => {
+        try {
+            const cidades = await fetchCidades(estado);
+            onInputChange("cidade", ""); // Limpa a cidade selecionada
+            onEstadoChange({ target: { value: estado } } as React.ChangeEvent<HTMLSelectElement>);
+            onInputChange("cidades", cidades.join(", "));
+        } catch (error) {
+            console.error("Erro ao buscar cidades:", error);
+        }
+    };
 
     return (
         <>
@@ -63,9 +68,9 @@ export const EnderecoForm: React.FC<EnderecoFormProps> = ({
                         id="estado"
                         value={formData.estado}
                         onChange={(e) => {
-                            const estadoSelecionado = e.target.value; this
+                            const estadoSelecionado = e.target.value;
                             onEstadoChange(e);
-                            fetchCidades(estadoSelecionado)
+                            handleEstadoChange(estadoSelecionado)
                         }}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                         required

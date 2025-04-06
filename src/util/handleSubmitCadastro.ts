@@ -1,20 +1,26 @@
+interface FormData {
+  nome: string;
+  email: string;
+  senha: string;
+}
+
+interface EnderecoData {
+  cep: string;
+  estado: string;
+  cidade: string;
+}
+
 export function handleSubmitCadastro(
-    e: React.FormEvent,
-    validaFormulario: () => boolean,
-    formData: any,
-    enderecoData: any,
-    onSuccess: () => void
+  e: React.FormEvent,
+  formData: FormData,
+  enderecoData: EnderecoData,
+  onSuccess: () => void
 ): void {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!validaFormulario()) {
-        alert('Por favor, corrija os campos destacados.');
-        return;
-    }
+  const users = JSON.parse(localStorage.getItem("users") || "[]");
+  users.push({ ...formData, ...enderecoData });
+  localStorage.setItem("users", JSON.stringify(users));
 
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    users.push({ ...formData, ...enderecoData });
-    localStorage.setItem('users', JSON.stringify(users));
-
-    onSuccess();
+  onSuccess();
 }
