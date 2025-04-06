@@ -1,7 +1,12 @@
 import { render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import { Header } from "../components/Header";
 
 test("deve renderizar o título corretamente", () => {
-  render(<Header />);
-  expect(screen.getByText("Fala Cidadão")).toBeInTheDocument();
+  render(
+    <MemoryRouter>
+      <Header />
+    </MemoryRouter>
+  );
+  expect(screen.getByText("Sistema de Denúncias")).toBeInTheDocument();
 });

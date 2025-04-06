@@ -79,10 +79,6 @@ describe('EnderecoForm', () => {
     it('should handle API errors gracefully when fetching cities', async () => {
         const consoleErrorMock = jest.spyOn(console, 'error').mockImplementation(() => {});
 
-        global.fetch = jest.fn(() =>
-            Promise.reject(new Error('Erro ao buscar cidades'))
-        );
-
         render(<EnderecoForm {...mockProps} />);
 
         const estadoSelect = screen.getByLabelText('Estado');
