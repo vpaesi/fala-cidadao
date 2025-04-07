@@ -1,13 +1,14 @@
 import { useState } from 'react';
+import { EnderecoData } from '../types/types';
 import { fetchEstados as fetchEstadosUtil } from '../util/fetchEstados';
 import { fetchCidades as fetchCidadesUtil } from '../util/fetchCidades';
-import { handleCepChange as handleCepChangeUtil } from '../util/handleCepChange';
+import { validarCEP } from '../util/validarCEP';
 
 export const useEndereco = () => {
   const [estados, setEstados] = useState<string[]>([]);
   const [cidades, setCidades] = useState<string[]>([]);
   const [cepError, setCepError] = useState('');
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<EnderecoData>({
     cep: '',
     estado: '',
     cidade: '',
@@ -27,11 +28,54 @@ export const useEndereco = () => {
 
   const fetchCidades = async (estado: string): Promise<void> => {
     try {
-      const cidades = await fetchCidadesUtil(estado);
-      setCidades(cidades);
+      const cidadesBrasil = await fetchCidadesUtil(estado);
+      setCidades(cidadesBrasil);
     } catch (error) {
       console.error('Erro ao buscar cidades:', error);
     }
+  };
+
+  const handleCepChange = async (cep: string): Promise<void> => {
+    setFormData((prev) => ({ ...prev, cep }));
+
+    if (!validarCEP(cep)) {
+      setCepError('CEP inválido.');
+      return;
+    }
+
+    try {
+      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+      const data = await response.json();
+
+      if (data.erro) {
+        setCepError('CEP não encontrado.');
+      } else {
+        setCepError('');
+        setFormData((prev) => ({
+          ...prev,
+          estado: data.uf,
+          cidade: data.localidade,
+          rua: data.logradouro,
+        }));
+        await fetchCidades(data.uf); // Atualiza as cidades do estado automaticamente
+      }
+    } catch (error) {
+      setCepError('Erro ao buscar o CEP.');
+      console.error('Erro ao buscar o CEP:', error);
+    }
+  };
+
+  const handleEstadoChange = async (estado: string): Promise<void> => {
+    setFormData((prev) => ({ ...prev, estado, cidade: '' })); // Limpa a cidade
+    try {
+      await fetchCidades(estado); // Aguarda o carregamento das cidades
+    } catch (error) {
+      console.error('Erro ao buscar cidades:', error);
+    }
+  };
+
+  const handleCidadeChange = (cidade: string): void => {
+    setFormData((prev) => ({ ...prev, cidade }));
   };
 
   return {
@@ -42,6 +86,8 @@ export const useEndereco = () => {
     setFormData,
     fetchEstados,
     fetchCidades,
-    handleCepChange: (cep: string) => handleCepChangeUtil(cep, setFormData, setCepError),
+    handleCepChange,
+    handleEstadoChange,
+    handleCidadeChange,
   };
 };

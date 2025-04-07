@@ -55,7 +55,7 @@ export const SignupForm: React.FC = () => {
         cepError={cepError}
         estados={estados}
         cidades={cidades}
-        onCepChange={(e) => handleCepChange(e.target.value)}
+        onCepChange={(cep) => handleCepChange(cep)}
         onEstadoChange={(e) => setEnderecoData({ ...enderecoData, estado: e.target.value })}
         onCidadeChange={(e) => setEnderecoData({ ...enderecoData, cidade: e.target.value })}
         onInputChange={(field, value) => setEnderecoData({ ...enderecoData, [field]: value })}

@@ -1,14 +1,4 @@
-interface FormData {
-  nome: string;
-  email: string;
-  senha: string;
-}
-
-interface EnderecoData {
-  cep: string;
-  estado: string;
-  cidade: string;
-}
+import { FormData, EnderecoData } from '../types/types';
 
 export function handleSubmitCadastro(
   e: React.FormEvent,

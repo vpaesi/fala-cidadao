@@ -1,20 +1,9 @@
+import { DenunciaFormData, EnderecoData } from '../types/types';
 import { Denuncia } from '../types/denuncia';
-
-interface FormData {
-  titulo: string;
-  descricao: string;
-}
-
-interface EnderecoData {
-  cep: string;
-  estado: string;
-  cidade: string;
-  rua: string;
-}
 
 export async function handleSubmitDenuncia(
   e: React.FormEvent,
-  formData: FormData,
+  formData: DenunciaFormData,
   enderecoData: EnderecoData,
   imagemFile: File | null,
   addDenuncia: (denuncia: Omit<Denuncia, "id" | "dataCriacao">) => Promise<void>,

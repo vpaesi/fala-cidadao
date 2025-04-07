@@ -1,13 +1,4 @@
-interface FormData {
-  nome: string;
-  email: string;
-}
-
-interface EnderecoData {
-  cep: string;
-  estado: string;
-  cidade: string;
-}
+import { FormData, EnderecoData } from '../types/types';
 
 export function validarFormulario(
   formData: FormData,

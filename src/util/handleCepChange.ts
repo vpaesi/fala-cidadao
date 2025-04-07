@@ -1,15 +1,9 @@
+import { EnderecoData } from '../types/types';
 import { validarCEP } from './validarCEP';
-
-interface FormData {
-  cep: string;
-  estado: string;
-  cidade: string;
-  rua: string;
-}
 
 export const handleCepChange = async (
   cep: string,
-  setFormData: React.Dispatch<React.SetStateAction<FormData>>,
+  setFormData: React.Dispatch<React.SetStateAction<EnderecoData>>,
   setCepError: React.Dispatch<React.SetStateAction<string>>
 ): Promise<void> => {
   setFormData((prev) => ({ ...prev, cep }));
