@@ -8,5 +8,5 @@ test("deve renderizar o título corretamente", () => {
       <Header />
     </MemoryRouter>
   );
-  expect(screen.getByText("Sistema de Denúncias")).toBeInTheDocument();
+  expect(screen.getByText("Fala Cidadão")).toBeInTheDocument();
 });

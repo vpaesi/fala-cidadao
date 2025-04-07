@@ -20,7 +20,7 @@ export const Login: React.FC = () => {
     } else {
       alert(message);
       if (message === "Usuário não cadastrado. Por favor, faça o cadastro primeiro.") {
-        navigate('/cadastro'); // Redireciona para a página de cadastro
+        navigate('/cadastro');
       }
     }
   };

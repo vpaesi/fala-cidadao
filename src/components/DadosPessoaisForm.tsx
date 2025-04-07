@@ -28,23 +28,34 @@ export const DadosPessoaisForm: React.FC<DadosPessoaisFormProps> = ({ formData, 
   };
 
   const handleTelefoneChange = (value: string) => {
-    const formattedValue = value.replace(/\D/g, '').replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
-    if (/[^0-9\(\)\s\-]/.test(value)) {
-      setLocalErrors((prev) => ({ ...prev, telefone: 'Apenas números são permitidos no Telefone.' }));
-    } else {
-      setLocalErrors((prev) => ({ ...prev, telefone: '' }));
-      onChange('telefone', formattedValue);
+    const apenasNumeros = value.replace(/\D/g, '');
+
+    if (apenasNumeros.length > 11) {
+      setLocalErrors((prev) => ({ ...prev, telefone: 'O telefone deve ter no máximo 11 números.' }));
+      return;
     }
+
+    const formattedValue = apenasNumeros.replace(/^(\d{2})(\d{5})(\d{0,4})$/, '($1) $2-$3');
+
+    setLocalErrors((prev) => ({ ...prev, telefone: '' }));
+    onChange('telefone', formattedValue);
   };
 
   const handleCpfChange = (value: string) => {
-    const formattedValue = value.replace(/\D/g, '');
-    if (/[^0-9]/.test(value)) {
-      setLocalErrors((prev) => ({ ...prev, cpf: 'Apenas números são permitidos no CPF.' }));
-    } else {
-      setLocalErrors((prev) => ({ ...prev, cpf: '' }));
-      onChange('cpf', formattedValue);
+    const apenasNumeros = value.replace(/\D/g, '');
+
+    if (apenasNumeros.length > 11) {
+      setLocalErrors((prev) => ({ ...prev, cpf: 'O CPF deve ter no máximo 11 números.' }));
+      return;
     }
+
+    const formattedValue = apenasNumeros
+      .replace(/^(\d{3})(\d)/, '$1.$2')
+      .replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3')
+      .replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4');
+
+    setLocalErrors((prev) => ({ ...prev, cpf: '' }));
+    onChange('cpf', formattedValue);
   };
 
   return (

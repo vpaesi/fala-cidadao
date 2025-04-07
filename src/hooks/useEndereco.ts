@@ -57,7 +57,7 @@ export const useEndereco = () => {
           cidade: data.localidade,
           rua: data.logradouro,
         }));
-        await fetchCidades(data.uf); // Atualiza as cidades do estado automaticamente
+        await fetchCidades(data.uf);
       }
     } catch (error) {
       setCepError('Erro ao buscar o CEP.');
@@ -66,9 +66,9 @@ export const useEndereco = () => {
   };
 
   const handleEstadoChange = async (estado: string): Promise<void> => {
-    setFormData((prev) => ({ ...prev, estado, cidade: '' })); // Limpa a cidade
+    setFormData((prev) => ({ ...prev, estado, cidade: '' }));
     try {
-      await fetchCidades(estado); // Aguarda o carregamento das cidades
+      await fetchCidades(estado);
     } catch (error) {
       console.error('Erro ao buscar cidades:', error);
     }

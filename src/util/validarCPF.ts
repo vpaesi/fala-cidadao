@@ -1,5 +1,5 @@
 export function validarCPF(cpf: string): boolean {
-  cpf = cpf.replace(/\D/g, ""); // Remove caracteres não numéricos
+  cpf = cpf.replace(/\D/g, "");
 
   if (cpf.length !== 11) return false;
 

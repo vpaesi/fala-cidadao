@@ -9,8 +9,9 @@ export const Home: React.FC = () => {
         <div className="text-center">
           <AlertTriangle className="h-16 w-16 text-indigo-600 mx-auto" />
           <h1 className="mt-4 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-            Sistema de Denúncias
+            Fala Cidadão
           </h1>
+          <h2>Sistema de denúncias</h2>
           <p className="mt-6 text-lg leading-8 text-gray-600">
             Ajude a melhorar nossa cidade! Registre denúncias sobre problemas em sua região.
           </p>

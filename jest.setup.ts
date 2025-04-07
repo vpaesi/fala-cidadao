@@ -1,6 +1,5 @@
 import '@testing-library/jest-dom';
 
-// Mock global fetch
 global.fetch = jest.fn((url) =>
   Promise.resolve({
     ok: true,

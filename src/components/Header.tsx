@@ -18,7 +18,7 @@ export const Header: React.FC = () => {
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center space-x-2">
             <AlertTriangle className="h-8 w-8" />
-            <span className="font-bold text-xl">Sistema de Denúncias</span>
+            <span className="font-bold text-xl">Fala Cidadão</span>
           </Link>
           <div className="flex space-x-4">
             {location.pathname !== '/' && (

@@ -34,12 +34,20 @@ export const EnderecoForm: React.FC<EnderecoFormProps> = ({
   const handleEstadoChange = async (estado: string) => {
     try {
       const cidades = await fetchCidades(estado);
-      onInputChange("cidade", ""); // Limpa a cidade selecionada
+      onInputChange("cidade", "");
       onEstadoChange({ target: { value: estado } } as React.ChangeEvent<HTMLSelectElement>);
       onInputChange("cidades", cidades.join(", "));
     } catch (error) {
       console.error("Erro ao buscar cidades:", error);
     }
+  };
+
+  const handleCepInput = (value: string) => {
+    const apenasNumeros = value.replace(/\D/g, '');
+
+    const cepFormatado = apenasNumeros.replace(/^(\d{5})(\d{1,3})$/, '$1-$2');
+
+    onCepChange(cepFormatado);
   };
 
   return (
@@ -64,7 +72,7 @@ export const EnderecoForm: React.FC<EnderecoFormProps> = ({
             type="text"
             value={cep}
             placeholder="Digite o CEP"
-            onChange={(e) => onCepChange(e.target.value)}
+            onChange={(e) => handleCepInput(e.target.value)}
             required
             errorMessage={cepError}            
           />
