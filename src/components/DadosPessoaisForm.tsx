@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { InputField } from './InputField';
+import { validarCPF } from '../util/validarCPF';
 
 interface DadosPessoaisFormProps {
   formData: {
@@ -20,24 +21,42 @@ export const DadosPessoaisForm: React.FC<DadosPessoaisFormProps> = ({ formData, 
 
   const handleNomeChange = (value: string) => {
     if (/[^a-zA-Z\s]/.test(value)) {
-      setLocalErrors((prev) => ({ ...prev, nome: 'Apenas letras são permitidas no Nome Completo.' }));
-    } else {
-      setLocalErrors((prev) => ({ ...prev, nome: '' }));
-      onChange('nome', value);
+      // setLocalErrors((prev) => ({ ...prev, nome: 'Apenas letras são permitidas no Nome Completo.' }));
+      return;
     }
+
+    setLocalErrors((prev) => ({ ...prev, nome: '' }));
+    onChange('nome', value);
   };
 
   const handleTelefoneChange = (value: string) => {
     const apenasNumeros = value.replace(/\D/g, '');
 
+    const numerosRepetidos = new Set([
+      '00000000000',
+      '11111111111',
+      '22222222222',
+      '33333333333',
+      '44444444444',
+      '55555555555',
+      '66666666666',
+      '77777777777',
+      '88888888888',
+      '99999999999',
+    ]);
+
+    if (numerosRepetidos.has(apenasNumeros)) {
+      setLocalErrors((prev) => ({ ...prev, telefone: 'Número de telefone inválido.' }));
+      return;
+    }
+
     if (apenasNumeros.length > 11) {
-      setLocalErrors((prev) => ({ ...prev, telefone: 'O telefone deve ter no máximo 11 números.' }));
       return;
     }
 
     const formattedValue = apenasNumeros.replace(/^(\d{2})(\d{5})(\d{0,4})$/, '($1) $2-$3');
 
-    setLocalErrors((prev) => ({ ...prev, telefone: '' }));
+    setLocalErrors((prev) => ({ ...prev, telefone: '' })); // Limpa o erro
     onChange('telefone', formattedValue);
   };
 
@@ -45,7 +64,6 @@ export const DadosPessoaisForm: React.FC<DadosPessoaisFormProps> = ({ formData, 
     const apenasNumeros = value.replace(/\D/g, '');
 
     if (apenasNumeros.length > 11) {
-      setLocalErrors((prev) => ({ ...prev, cpf: 'O CPF deve ter no máximo 11 números.' }));
       return;
     }
 
@@ -54,7 +72,12 @@ export const DadosPessoaisForm: React.FC<DadosPessoaisFormProps> = ({ formData, 
       .replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3')
       .replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4');
 
-    setLocalErrors((prev) => ({ ...prev, cpf: '' }));
+    if (!validarCPF(apenasNumeros)) {
+      setLocalErrors((prev) => ({ ...prev, cpf: 'Insira um CPF válido.' }));
+    } else {
+      setLocalErrors((prev) => ({ ...prev, cpf: '' }));
+    }
+
     onChange('cpf', formattedValue);
   };
 
@@ -97,7 +120,7 @@ export const DadosPessoaisForm: React.FC<DadosPessoaisFormProps> = ({ formData, 
         label="Telefone"
         type="text"
         value={formData.telefone}
-        placeholder="(xx) xxxxx-xxxx"
+        placeholder="(DDD) 9xxxx-xxxx"
         onChange={(e) => handleTelefoneChange(e.target.value)}
         required
         errorMessage={localErrors.telefone || errors.telefone}
