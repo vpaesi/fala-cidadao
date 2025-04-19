@@ -4,6 +4,8 @@ import { EnderecoForm } from '../components/EnderecoForm';
 import { validarFormulario } from '../util/validarFormulario';
 import { DadosPessoaisForm } from '../components/DadosPessoaisForm';
 import { handleSubmitCadastro } from '../util/handleSubmitCadastro';
+import { toast } from 'react-toastify';
+import { ehMaiorDeIdade } from '../util/validarIdade';
 
 export const SignupForm: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -32,14 +34,48 @@ export const SignupForm: React.FC = () => {
     fetchEstados();
   }, [fetchEstados]);
 
+  const handleDobChange = (value: string) => {
+    if (!ehMaiorDeIdade(value)) {
+      setErrors((prev) => ({ ...prev, dob: 'Você deve ter pelo menos 18 anos para se cadastrar.' }));
+    } else {
+      setErrors((prev) => ({ ...prev, dob: '' }));
+    }
+
+    setFormData((prev) => ({ ...prev, dob: value }));
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const isValid = validarFormulario(formData, enderecoData, setErrors);
-    if (isValid) {
-      handleSubmitCadastro(e, formData, enderecoData, () => {
-        window.location.href = "/login";
+
+    if (!isValid) {
+      toast.error('Por favor, revise os campos com erro.', {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: 'colored',
       });
+      return;
     }
+
+    handleSubmitCadastro(e, formData, enderecoData, () => {
+      toast.success('Cadastro realizado com sucesso!', {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: 'colored',
+      });
+
+      setTimeout(() => {
+        window.location.href = '/login';
+      }, 3000);
+    });
   };
 
   return (
@@ -47,7 +83,13 @@ export const SignupForm: React.FC = () => {
       <DadosPessoaisForm
         formData={formData}
         errors={errors}
-        onChange={(field, value) => setFormData({ ...formData, [field]: value })}
+        onChange={(field, value) => {
+          if (field === 'dob') {
+            handleDobChange(value);
+          } else {
+            setFormData({ ...formData, [field]: value });
+          }
+        }}
       />
       <EnderecoForm
         formData={enderecoData}

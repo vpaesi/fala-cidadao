@@ -8,9 +8,13 @@ export function handleSubmitCadastro(
 ): void {
   e.preventDefault();
 
-  const users = JSON.parse(localStorage.getItem("users") || "[]");
-  users.push({ ...formData, ...enderecoData });
-  localStorage.setItem("users", JSON.stringify(users));
+  try {
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    users.push({ ...formData, ...enderecoData });
+    localStorage.setItem('users', JSON.stringify(users));
 
-  onSuccess();
+    onSuccess();
+  } catch (error) {
+    console.error('Erro ao cadastrar:', error);
+  }
 }
