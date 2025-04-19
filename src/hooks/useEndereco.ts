@@ -39,7 +39,7 @@ export const useEndereco = () => {
     setFormData((prev) => ({ ...prev, cep }));
 
     if (!validarCEP(cep)) {
-      setCepError('Insira um CEP valido.');
+      setCepError('Insira um CEP válido.');
       return;
     }
 

@@ -7,6 +7,7 @@ interface InputFieldProps {
   value: string;
   placeholder?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onBlur?: () => void;
   readOnly?: boolean;
   required?: boolean;
   style?: React.CSSProperties;

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { InputField } from './InputField';
-import { validarCPF } from '../util/validarCPF';
+import { validarNome, validarCPF, validarTelefone } from '../util/validacoes';
+import { formatarCPF, formatarTelefone } from '../util/formatacoes';
 
 interface DadosPessoaisFormProps {
   formData: {
@@ -17,46 +18,28 @@ interface DadosPessoaisFormProps {
 }
 
 export const DadosPessoaisForm: React.FC<DadosPessoaisFormProps> = ({ formData, errors, onChange }) => {
-  const [localErrors, setLocalErrors] = useState<{ [key: string]: string }>({});
+  const [localErrors, setErrors] = useState(errors);
 
   const handleNomeChange = (value: string) => {
-    if (/[^a-zA-Z\s]/.test(value)) {
-      return;
-    }
-
-    setLocalErrors((prev) => ({ ...prev, nome: '' }));
+    if (!validarNome(value)) return;
     onChange('nome', value);
   };
 
   const handleTelefoneChange = (value: string) => {
     const apenasNumeros = value.replace(/\D/g, '');
 
-    const numerosRepetidos = new Set([
-      '00000000000',
-      '11111111111',
-      '22222222222',
-      '33333333333',
-      '44444444444',
-      '55555555555',
-      '66666666666',
-      '77777777777',
-      '88888888888',
-      '99999999999',
-    ]);
-
-    if (numerosRepetidos.has(apenasNumeros)) {
-      setLocalErrors((prev) => ({ ...prev, telefone: 'Insira um telefone valido.' }));
-      return;
-    }
-
     if (apenasNumeros.length > 11) {
       return;
     }
 
-    const formattedValue = apenasNumeros.replace(/^(\d{2})(\d{5})(\d{0,4})$/, '($1) $2-$3');
-
-    setLocalErrors((prev) => ({ ...prev, telefone: '' }));
+    const formattedValue = formatarTelefone(apenasNumeros);
     onChange('telefone', formattedValue);
+
+    if (apenasNumeros.length >= 10 && !validarTelefone(apenasNumeros)) {
+      setErrors((prev) => ({ ...prev, telefone: 'Insira um telefone válido.' }));
+    } else {
+      setErrors((prev) => ({ ...prev, telefone: '' }));
+    }
   };
 
   const handleCpfChange = (value: string) => {
@@ -66,18 +49,22 @@ export const DadosPessoaisForm: React.FC<DadosPessoaisFormProps> = ({ formData, 
       return;
     }
 
-    const formattedValue = apenasNumeros
-      .replace(/^(\d{3})(\d)/, '$1.$2')
-      .replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3')
-      .replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4');
-
-    if (!validarCPF(apenasNumeros)) {
-      setLocalErrors((prev) => ({ ...prev, cpf: 'Insira um CPF válido.' }));
-    } else {
-      setLocalErrors((prev) => ({ ...prev, cpf: '' }));
-    }
-
+    const formattedValue = formatarCPF(apenasNumeros);
     onChange('cpf', formattedValue);
+    
+    if (apenasNumeros.length === 11 && !validarCPF(apenasNumeros)) {
+      setErrors((prev) => ({ ...prev, cpf: 'Insira um CPF válido.' }));
+    } else {
+      setErrors((prev) => ({ ...prev, cpf: '' }));
+    }
+  };
+
+  const handleDobChange = (value: string) => {
+    onChange('dob', value);
+  };
+
+  const handleEmailChange = (value: string) => {
+    onChange('email', value);
   };
 
   return (
@@ -91,7 +78,7 @@ export const DadosPessoaisForm: React.FC<DadosPessoaisFormProps> = ({ formData, 
         placeholder="Digite seu nome"
         onChange={(e) => handleNomeChange(e.target.value)}
         required
-        errorMessage={localErrors.nome || errors.nome}
+        errorMessage={localErrors.nome}
       />
       <div className="grid grid-cols-2 gap-4">
         <InputField
@@ -99,7 +86,7 @@ export const DadosPessoaisForm: React.FC<DadosPessoaisFormProps> = ({ formData, 
           label="Data de Nascimento"
           type="date"
           value={formData.dob}
-          onChange={(e) => onChange('dob', e.target.value)}
+          onChange={(e) => handleDobChange(e.target.value)}
           required
           errorMessage={errors.dob}
         />
@@ -111,7 +98,7 @@ export const DadosPessoaisForm: React.FC<DadosPessoaisFormProps> = ({ formData, 
           placeholder="Digite seu CPF"
           onChange={(e) => handleCpfChange(e.target.value)}
           required
-          errorMessage={localErrors.cpf || errors.cpf}
+          errorMessage={localErrors.cpf}
         />
       </div>
       <InputField
@@ -122,7 +109,7 @@ export const DadosPessoaisForm: React.FC<DadosPessoaisFormProps> = ({ formData, 
         placeholder="(DDD) 9xxxx-xxxx"
         onChange={(e) => handleTelefoneChange(e.target.value)}
         required
-        errorMessage={localErrors.telefone || errors.telefone}
+        errorMessage={localErrors.telefone}
       />
       <InputField
         id="email"
@@ -130,7 +117,7 @@ export const DadosPessoaisForm: React.FC<DadosPessoaisFormProps> = ({ formData, 
         type="email"
         value={formData.email}
         placeholder="Digite seu e-mail"
-        onChange={(e) => onChange('email', e.target.value)}
+        onChange={(e) => handleEmailChange(e.target.value)}
         required
         errorMessage={errors.email}
       />
@@ -143,7 +130,7 @@ export const DadosPessoaisForm: React.FC<DadosPessoaisFormProps> = ({ formData, 
           placeholder="Digite sua senha"
           onChange={(e) => onChange('senha', e.target.value)}
           required
-          errorMessage={errors.senha}
+          errorMessage={localErrors.senha}
         />
         <InputField
           id="confirmacaoSenha"
@@ -153,7 +140,7 @@ export const DadosPessoaisForm: React.FC<DadosPessoaisFormProps> = ({ formData, 
           placeholder="Confirme sua senha"
           onChange={(e) => onChange('confirmacaoSenha', e.target.value)}
           required
-          errorMessage={errors.confirmacaoSenha}
+          errorMessage={localErrors.confirmacaoSenha}
         />
       </div>
     </>

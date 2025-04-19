@@ -108,7 +108,7 @@ export const SignupForm: React.FC = () => {
         style={{ marginTop: '2rem', border: '1px solid rgb(121, 121, 122)' }}
       >
         Cadastrar
-      </button>
+      </button>      
     </form>
   );
 };
