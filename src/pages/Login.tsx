@@ -16,7 +16,7 @@ export const Login: React.FC = () => {
 
     if (success && user) {
       localStorage.setItem('user', JSON.stringify(user));
-      navigate('/denuncias');
+      navigate('/');
     } else {
       alert(message);
       if (message === "Usuário não cadastrado. Por favor, faça o cadastro primeiro.") {
