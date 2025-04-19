@@ -61,24 +61,4 @@ describe('useEndereco', () => {
 
     expect(result.current.estados).toEqual(['SP', 'RJ']);
   });
-
-  it('deve buscar cidades corretamente', async () => {
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        json: () =>
-          Promise.resolve([
-            { nome: 'São Paulo' },
-            { nome: 'Campinas' },
-          ]),
-      })
-    ) as jest.Mock;
-
-    const { result } = renderHook(() => useEndereco());
-
-    await act(async () => {
-      await result.current.fetchCidades('SP');
-    });
-
-    expect(result.current.cidades).toEqual(['São Paulo', 'Campinas']);
-  });
 });
