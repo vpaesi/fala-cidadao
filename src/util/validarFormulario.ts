@@ -1,4 +1,4 @@
-import { validarCPF } from './validarCPF';
+import { ehMaiorDeIdade } from './validarIdade';
 import { FormData, EnderecoData } from '../types/types';
 
 export function validarFormulario(
@@ -10,6 +10,10 @@ export function validarFormulario(
 
   if (!formData.nome.trim()) errors.nome = "O campo Nome é obrigatório.";
 
+  if (!formData.dob || !ehMaiorDeIdade(formData.dob)) {
+    errors.dob = "Você deve ter pelo menos 18 anos para se cadastrar.";
+  }
+
   if (
     !formData.email.trim() ||
     !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) ||
@@ -19,7 +23,7 @@ export function validarFormulario(
   }
 
   if (!enderecoData.cep.trim()) errors.cep = "O campo CEP é obrigatório.";
-  
+
   if (formData.senha !== formData.confirmacaoSenha) {
     errors.confirmacaoSenha = "As senhas não coincidem.";
   }
