@@ -1,5 +1,4 @@
 import { EnderecoData } from '../types/types';
-import { validarCEP } from './validarCEP';
 
 export const handleCepChange = async (
   cep: string,
@@ -7,11 +6,6 @@ export const handleCepChange = async (
   setCepError: React.Dispatch<React.SetStateAction<string>>
 ): Promise<void> => {
   setFormData((prev) => ({ ...prev, cep }));
-
-  if (!validarCEP(cep)) {
-    setCepError("CEP inválido.");
-    return;
-  }
 
   try {
     const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);

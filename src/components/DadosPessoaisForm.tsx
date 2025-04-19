@@ -21,7 +21,6 @@ export const DadosPessoaisForm: React.FC<DadosPessoaisFormProps> = ({ formData, 
 
   const handleNomeChange = (value: string) => {
     if (/[^a-zA-Z\s]/.test(value)) {
-      // setLocalErrors((prev) => ({ ...prev, nome: 'Apenas letras são permitidas no Nome Completo.' }));
       return;
     }
 
@@ -46,7 +45,7 @@ export const DadosPessoaisForm: React.FC<DadosPessoaisFormProps> = ({ formData, 
     ]);
 
     if (numerosRepetidos.has(apenasNumeros)) {
-      setLocalErrors((prev) => ({ ...prev, telefone: 'Número de telefone inválido.' }));
+      setLocalErrors((prev) => ({ ...prev, telefone: 'Insira um telefone valido.' }));
       return;
     }
 
@@ -56,7 +55,7 @@ export const DadosPessoaisForm: React.FC<DadosPessoaisFormProps> = ({ formData, 
 
     const formattedValue = apenasNumeros.replace(/^(\d{2})(\d{5})(\d{0,4})$/, '($1) $2-$3');
 
-    setLocalErrors((prev) => ({ ...prev, telefone: '' })); // Limpa o erro
+    setLocalErrors((prev) => ({ ...prev, telefone: '' }));
     onChange('telefone', formattedValue);
   };
 
