@@ -55,8 +55,12 @@ export const NovaDenuncia: React.FC = () => {
             label="Dê um título à sua denúncia"
             type="text"
             value={formData.titulo}
-            placeholder="Digite o título"
-            onChange={(e) => setFormData({ ...formData, titulo: e.target.value })}
+            placeholder="Digite o título (máx. 40 caracteres)"
+            onChange={(e) => {
+              if (e.target.value.length <= 40) {
+                setFormData({ ...formData, titulo: e.target.value });
+              }
+            }}
             required
           />
           <InputField

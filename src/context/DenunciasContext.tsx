@@ -16,14 +16,14 @@ export const DenunciasProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const addDenuncia = useCallback(async (novaDenuncia: Omit<Denuncia, 'id' | 'dataCriacao'>) => {
     setLoading(true);
     try {
-      // Simulando uma chamada à API
       const denuncia: Denuncia = {
         ...novaDenuncia,
         id: crypto.randomUUID(),
         dataCriacao: new Date().toISOString(),
+        titulo: novaDenuncia.titulo,
       };
 
-      setDenuncias(prev => [...prev, denuncia]);
+      setDenuncias((prev) => [...prev, denuncia]);
     } catch (error) {
       console.error('Erro ao adicionar denúncia:', error);
       throw error;
